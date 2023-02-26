@@ -1,48 +1,94 @@
 using OpenTK.Graphics.OpenGL;
 
+namespace bgl
+{
 
-namespace bgl {
+    class Shader
+    {
+        private int shader;
+
+        public Shader(in string path)
+        {
+            ShaderType shaderType = GetShaderType(path);
+            shader = GL.CreateShader(shaderType);
+            LoadSource(path);
+            Compile();
+        }
+        ~Shader()
+        {
+            GL.DeleteShader(shader);
+        }
+
+        public ShaderType GetShaderType(in string path)
+        {
+            string? extension = System.IO.Path.GetExtension(path);
+            if (extension == null)
+            {
+                throw new System.Exception("invalid extension");
+            }
+
+            switch (extension)
+            {
+                case ".fs": return ShaderType.VertexShader;
+                case ".vs": return ShaderType.FragmentShader;
+                case ".gs": return ShaderType.GeometryShader;
+            }
+
+            throw new System.Exception("could not determine vertex type");
+        }
+
+        private void LoadSource(in string path)
+        {
+            string[] lines = System.IO.File.ReadAllLines(path);
+            int[] lengths = { };
+            GL.ShaderSource(shader, lines.Length, lines, lengths);
+        }
+
+        private void Compile()
+        {
+
+            GL.CompileShader(shader);
+
+            string log = GL.GetShaderInfoLog(shader);
+
+            System.Console.Write("GLSL Log: " + log);
 
 
-class Shader {
-
-    private int shader;
-    private int program;
-
-    public Shader(string path) {
-        // TODO
-    }
-
-    ~Shader() {
-        // TODO: delete shaders
-    }
-
-    private string LoadSource() {
-        return ""; // TODO
-    }
-
-    private void Compile() {
-        // TODO
-    
-        GL.CreateProgram();
-
-        //GL.LinkProgram(program);
-        //GL.GetShaderInfoLog();
-
-        string[] sourceCode = { "" };
-        int[] lengths = { 0 };
-        GL.ShaderSource(shader, sourceCode.Length, sourceCode, lengths);
-    }
-
-    public void asds() {
-
-        int shader = GL.CreateShader(ShaderType.FragmentShader);
-     
+        }
+    };
 
 
-    }
+    class ShaderProgram
+    {
 
-};
+        private int shader;
+        private int program;
+
+        public ShaderProgram(in string paths)
+        {
+            //    LoadSource(path)
+            Link();
+        }
+
+        ~ShaderProgram()
+        {
+            // TODO: delete shaders
+        }
+
+        private void Link()
+        {
+            // TODO
+            GL.CreateProgram();
+            //GL.LinkProgram(program);
+            //GL.GetShaderInfoLog();
+
+        }
+
+        public void Use()
+        {
+
+        }
+    };
 
 
 

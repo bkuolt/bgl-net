@@ -20,7 +20,6 @@ namespace bgl
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
-
             KeyboardState input = KeyboardState;
 
             if (input.IsKeyDown(Keys.Escape))
