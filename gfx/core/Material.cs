@@ -1,4 +1,5 @@
 using OpenTK.Graphics.OpenGL;
+using OpenGL = OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
@@ -16,7 +17,7 @@ namespace bgl
 
         public void Bind()
         {
-            int unit = (int)OpenGL.TextureUnit.Texture0;
+            int unit = (int) OpenGL.TextureUnit.Texture0;
             for (uint index = 0; index < Textures.Length; ++index, ++unit)
             {
                 GL.BindTextureUnit(unit, Textures[index]);

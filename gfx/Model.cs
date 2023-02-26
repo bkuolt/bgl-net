@@ -1,11 +1,17 @@
 
-namespace bgl {
-    class Model {
-        public void Draw() {
-            // TODO: draw all meshes
+namespace bgl
+{
+    public class Model
+    {
+        public void Draw()
+        {
+            foreach (var mesh in meshes)
+            {
+                mesh.Draw();
+            }
         }
 
-        private Mesh[] mesh;
+        private Mesh[] meshes;
     };
 
 }
