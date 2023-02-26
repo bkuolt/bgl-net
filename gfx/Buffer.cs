@@ -3,22 +3,29 @@ using OpenGL = OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
-    record BufferView
+    public record BufferView
     {
-        OpenGL.BufferTarget target;
-        uint buffer;
-        int offset;
-        uint length;
+        public OpenGL.BufferTarget Target;
+        public Buffer Buffer;
+        public int Offset;
+        public uint Length;
     }
 
     public record Accessor
     {
         OpenGL.TypeEnum type;
         OpenGL.TypeEnum componentType;
-        uint count;
-        int bufferView;
+        public uint Count;
+        public BufferView BufferView;
         int byteOffset;
     }
+
+
+    class PrimitiveList {
+
+    }
+
+
 
     public class VertexArray
     {
@@ -69,6 +76,10 @@ namespace bgl
         ~Buffer()
         {
             GL.DeleteBuffer(handle);
+        }
+
+        public void Bind() {
+            // TODO
         }
 
         // TODO: conversion operator

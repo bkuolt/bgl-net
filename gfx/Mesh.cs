@@ -1,15 +1,18 @@
 using OpenTK.Graphics.OpenGL;
+using OpenGL = OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
-
-
     class Mesh
     {
-        public Mesh(in byte[] indices, in byte[] vertices, in BufferView[] bufferViews)
+        public Mesh(in BufferView vertexBufferView,
+                    in BufferView indexBufferView,
+                    in VertexArray vao,
+                    OpenGL.PrimitiveType primitiveType)
         {
-
-            // TODO: create VAO from buffer views      
+    //        vertexBufferView = new BufferView();
+     //       indexBufferView = new BufferView();
+            this.primitiveType = primitiveType;
         }
 
         ~Mesh()
@@ -18,17 +21,25 @@ namespace bgl
         }
         public void Draw()
         {
-            // TODO: bind VAO
-            // TODO: bind textures;
-            program.Use();
+            vertexArray.Bind();
+            GL.DrawElements(primitiveType, (int) indexAcessor.Count, OpenGL.DrawElementsType.UnsignedInt, indexAcessor.BufferView.Offset);
         }
 
-        private bgl.Buffer vbo;
-        private bgl.Buffer ibo;
-        private bgl.VertexArray vao;
+        private Accessor indexAcessor;
+        private Accessor[] vertexAcessors;
 
-        private bgl.ShaderProgram program;
+        private VertexArray vertexArray;
+        private OpenGL.PrimitiveType primitiveType;
+        private Material? material;
+    };
 
+    class Model {
+
+        public void Draw() {
+            // TODO: draw all meshes
+        }
+
+        private Mesh[] mesh;
     };
 
 }
