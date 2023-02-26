@@ -23,8 +23,8 @@ namespace bgl
                     in VertexArray vao,
                     OpenGL.PrimitiveType primitiveType)
         {
-    //        vertexBufferView = new BufferView();
-     //       indexBufferView = new BufferView();
+            //        vertexBufferView = new BufferView();
+            //       indexBufferView = new BufferView();
             this.primitiveType = primitiveType;
         }
 
@@ -35,7 +35,7 @@ namespace bgl
         public void Draw()
         {
             vertexArray.Bind();
-            GL.DrawElements(primitiveType, (int) indexAcessor.Count, OpenGL.DrawElementsType.UnsignedInt, indexAcessor.BufferView.Offset);
+            GL.DrawElements(primitiveType, (int)indexAcessor.Count, OpenGL.DrawElementsType.UnsignedInt, indexAcessor.BufferView.Offset);
         }
 
         private Accessor indexAcessor;

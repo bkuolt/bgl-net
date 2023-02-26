@@ -61,11 +61,16 @@ namespace bgl
     };
 
 
-    class ShaderProgram
+    public class ShaderProgram
     {
 
         private int shader;
         private int program;
+
+        public ShaderProgram()
+        {
+            // TODO
+        }
 
         public ShaderProgram(in string paths)
         {
@@ -93,10 +98,11 @@ namespace bgl
         }
     };
 
-    public class UniformBuffer : Buffer {
+    public class UniformBuffer : Buffer
+    {
         public UniformBuffer(in byte[] data)
             : base(OpenGL.BufferTarget.UniformBuffer, data)
-        {}
+        { }
     }
 
 }
