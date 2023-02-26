@@ -45,19 +45,21 @@ namespace bgl
 
     class TextureLoader
     {
-        public static Texture Load(in string path)
+        public static Texture? Load(in string path)
         {
-            Image image = Image.FromFile(path);
-            var format = GetPixelFormat(image);
-            var type = GetPixelType(image);
+            Image image = new Image();  /////// TODODODODOO"!!!!!!!! Image.FromFile(path);
+           // var format = GetPixelFormat(image);
+         //   var type = GetPixelType(image);
             byte[] pixels = new byte[0];  // TODO
 
-            return new Texture(pixels, image.Width, image.Height, format, type);
+        //    return new Texture(pixels, (int) image.Width, (int) image.Height, format, type);
+           return null;  // new Texture(pixels, 0,0, 0, 0)
         }
-
+/* 
         private static OpenGL.PixelFormat GetPixelFormat(in Image image)
         {
-            switch (image.PixelFormat)
+     
+            switch (image.Format)
             {
                 case PixelFormat.Format32bppRgb:
                     return OpenGL.PixelFormat.Rgb;
@@ -72,6 +74,7 @@ namespace bgl
         {
             return OpenGL.PixelType.Byte;
         }
+    */
     }
 
 }  // namespace bgl

@@ -21,10 +21,9 @@ namespace bgl
     }
 
 
-    class PrimitiveList {
+    public class PrimitiveList {
 
     }
-
 
 
     public class VertexArray
@@ -84,18 +83,4 @@ namespace bgl
 
         // TODO: conversion operator
     }
-
-    public class VertexBuffer : Buffer
-    {
-        public VertexBuffer(byte[] data)
-            : base(BufferTarget.ElementArrayBuffer, data)
-        { }
-    }
-    public class IndexBuffer : Buffer
-    {
-        public IndexBuffer(byte[] data)
-            : base(BufferTarget.ArrayBuffer, data)
-        { }
-    }
-
 }

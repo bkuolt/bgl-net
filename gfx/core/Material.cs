@@ -1,7 +1,8 @@
 
 namespace bgl {
 
-class Material {
+public class Material {
+
     // TODO
 }
 

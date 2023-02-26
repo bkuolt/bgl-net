@@ -1,4 +1,7 @@
+using System;
+
 using OpenTK.Graphics.OpenGL;
+using OpenGL = OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
@@ -89,5 +92,11 @@ namespace bgl
 
         }
     };
+
+    public class UniformBuffer : Buffer {
+        public UniformBuffer(in byte[] data)
+            : base(OpenGL.BufferTarget.UniformBuffer, data)
+        {}
+    }
 
 }

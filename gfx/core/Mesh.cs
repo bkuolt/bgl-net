@@ -3,6 +3,19 @@ using OpenGL = OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
+    public class VertexBuffer : Buffer
+    {
+        public VertexBuffer(byte[] data)
+            : base(BufferTarget.ElementArrayBuffer, data)
+        { }
+    }
+    public class IndexBuffer : Buffer
+    {
+        public IndexBuffer(byte[] data)
+            : base(BufferTarget.ArrayBuffer, data)
+        { }
+    }
+
     class Mesh
     {
         public Mesh(in BufferView vertexBufferView,
@@ -31,15 +44,6 @@ namespace bgl
         private VertexArray vertexArray;
         private OpenGL.PrimitiveType primitiveType;
         private Material? material;
-    };
-
-    class Model {
-
-        public void Draw() {
-            // TODO: draw all meshes
-        }
-
-        private Mesh[] mesh;
     };
 
 }
