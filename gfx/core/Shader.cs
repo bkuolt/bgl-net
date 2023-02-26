@@ -8,18 +8,18 @@ namespace bgl
 
     class Shader
     {
-        private int shader;
+        private int handle;
 
         public Shader(in string path)
         {
             ShaderType shaderType = GetShaderType(path);
-            shader = GL.CreateShader(shaderType);
+            handle = GL.CreateShader(shaderType);
             LoadSource(path);
             Compile();
         }
         ~Shader()
         {
-            GL.DeleteShader(shader);
+            GL.DeleteShader(handle);
         }
 
         public ShaderType GetShaderType(in string path)
@@ -40,62 +40,73 @@ namespace bgl
             throw new System.Exception("could not determine vertex type");
         }
 
+        public static implicit operator int(Shader shader) => shader.handle;
+
         private void LoadSource(in string path)
         {
             string[] lines = System.IO.File.ReadAllLines(path);
             int[] lengths = { };
-            GL.ShaderSource(shader, lines.Length, lines, lengths);
+            GL.ShaderSource(handle, lines.Length, lines, lengths);
         }
 
         private void Compile()
         {
-
-            GL.CompileShader(shader);
-
-            string log = GL.GetShaderInfoLog(shader);
-
+            GL.CompileShader(handle);
+            string log = GL.GetShaderInfoLog(handle);
             System.Console.Write("GLSL Log: " + log);
-
-
         }
     };
 
 
     public class ShaderProgram
     {
-
-        private int shader;
-        private int program;
-
         public ShaderProgram()
         {
-            // TODO
+            handle = GL.CreateProgram();
         }
 
-        public ShaderProgram(in string paths)
+        public ShaderProgram(in string[] paths)
+            : base()
         {
-            //    LoadSource(path)
+            foreach (var path in paths) {
+                Shader shader = new Shader(path);
+                Attach(shader);
+            }
             Link();
         }
 
         ~ShaderProgram()
         {
-            // TODO: delete shaders
+            GL.DeleteProgram(handle);
+        }
+
+        private void Attach(/* in OpenGL.ShaderType type,*/ in Shader shader) {
+            GL.AttachShader(handle, shader);
         }
 
         private void Link()
         {
-            // TODO
-            GL.CreateProgram();
-            //GL.LinkProgram(program);
-            //GL.GetShaderInfoLog();
+            GL.LinkProgram(handle);
 
+            int linkStatus;
+            GL.GetProgram(handle, OpenGL.GetProgramParameterName.LinkStatus, out linkStatus);
+
+            if (linkStatus == 0) {
+                byte[] buffer = new byte[4096];
+                string infoLog;
+                int length;
+                GL.GetProgramInfoLog(handle, buffer.Length, out length, out infoLog);
+                Console.Write(infoLog);
+            }
         }
 
         public void Use()
         {
-
+            GL.UseProgram(handle);
         }
+
+        private int handle;
+
     };
 
     public class UniformBuffer : Buffer
@@ -104,5 +115,4 @@ namespace bgl
             : base(OpenGL.BufferTarget.UniformBuffer, data)
         { }
     }
-
 }
