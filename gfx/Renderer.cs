@@ -22,7 +22,7 @@ namespace bgl
             GL.Clear(ClearBufferMask.ColorBufferBit);
             //Code goes here.
 
-            program = new bgl.ShaderProgram("Shader/shader.vs");
+            // crashes --> program = new bgl.ShaderProgram( new string[]{ "Shader/shader.vs" });
         }
     }
 

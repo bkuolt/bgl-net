@@ -15,6 +15,12 @@ namespace bgl
             // TODO
         }
 
+        public Material() 
+        {
+            // TODO
+        }
+
+
         public void Bind()
         {
             int unit = (int) OpenGL.TextureUnit.Texture0;

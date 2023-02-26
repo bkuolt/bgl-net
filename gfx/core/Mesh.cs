@@ -18,6 +18,7 @@ namespace bgl
 
     class Mesh
     {
+        public Mesh() {}
         public Mesh(in BufferView vertexBufferView,
                     in BufferView indexBufferView,
                     in VertexArray vao,
