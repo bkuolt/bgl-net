@@ -11,9 +11,9 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace bgl
 {
-    class Render
+    public class Renderer
     {
-        void test()
+        public static void Draw()
         {
             GL.ClearColor(1.0f, 0.3f, 0.3f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit);

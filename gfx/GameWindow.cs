@@ -13,7 +13,9 @@ namespace bgl
     public class Window : GameWindow
     {
         public Window(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
-        { }
+        {
+            // TODO
+        }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
@@ -30,13 +32,7 @@ namespace bgl
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
-            GL.ClearColor(1.0f, 0.3f, 0.3f, 1.0f);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            //Code goes here.
-
+            bgl.Renderer.Draw();
             SwapBuffers();
         }
 
@@ -46,9 +42,5 @@ namespace bgl
             GL.Viewport(0, 0, e.Width, e.Height);
         }
     }
-
-
-
-
 
 }  // namespace bgl
