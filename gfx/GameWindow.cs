@@ -1,9 +1,7 @@
 
 using OpenTK.Graphics.OpenGL;
 
-
 using OpenTK.Windowing.Desktop;  // GameWindow
-
 
 using OpenTK.Windowing.Common;  // events
 using OpenTK.Windowing.Desktop;
@@ -50,19 +48,6 @@ namespace bgl
     }
 
 
-
-
-    class Test
-    {
-        void test()
-        {
-            GL.CreateShader(ShaderType.FragmentShader);
-
-
-
-        }
-    }
-    //using GL = OpenTK.Graphics.OpenGL.GL;
 
 
 
