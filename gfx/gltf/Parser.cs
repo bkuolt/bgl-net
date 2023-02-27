@@ -6,18 +6,55 @@ namespace BGL.GLTF
 
     class Parser
     {
+        private Json.JsonElement _root;
+
         public Parser(in string path)
         {
             LoadDocument(in path);
-
-            ParseImages();
-            ParseMeshes();
-            ParseMaterials();
-            ParseTextures();
-            ParseBuffers();
         }
 
-        private void ParseImages()
+        private void LoadDocument(in string path)
+        {
+            System.IO.FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open);
+            System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(stream);
+            _root = document.RootElement;
+        }
+
+        private void Parse()
+        {
+            var model = new GLTF.Model();
+
+            model.Images = ParseImages();
+            model.Textures = ParseTextures();
+            model.Materials = ParseMaterials();
+            model.Buffers = ParseBuffers();
+            model.Accessors = ParseAccessors();
+            model.BufferViews = ParseBufferViews();
+            model.Meshes = ParseMeshes();
+            model.Nodes = ParseNodes();
+        }
+
+        /* ----------------------------------------------------------------------------------  */
+        Model.Accessor[] ParseAccessors()
+        {
+            return null; /* TODO */
+        }
+
+        Model.BufferView[] ParseBufferViews()
+        {
+            return null; /* TODO */
+        }
+
+        Model.Node[] ParseNodes()
+        {
+            return null; // TODO
+        }
+
+        /* ----------------------------------------------------------------------------------  */
+
+        /* ----------------------------------------------------------------------------------  */
+
+        private Model.Image[] ParseImages()
         {
 #if false
             var imageNodes = GetArray("images");
@@ -27,9 +64,10 @@ namespace BGL.GLTF
                 Images[i] = new Image(imageNodes[i]);
             }
 #endif
+            return null;
         }
 
-        private void ParseMeshes()
+        private Model.Mesh[] ParseMeshes()
         {
 #if false
             var meshNodes = GetArray("meshes");
@@ -39,9 +77,10 @@ namespace BGL.GLTF
                 Meshes[i] = new Mesh(meshNodes[i]);
             }
 #endif
+            return null;
         }
 
-        private void ParseMaterials()
+        private Model.Material[] ParseMaterials()
         {
 #if false
             var materialNodes = GetArray("materials");
@@ -51,9 +90,10 @@ namespace BGL.GLTF
                 Materials[i] = new Material(materialNodes[i]);
             }
 #endif
+            return null;
         }
 
-        private void ParseTextures()
+        private Model.Texture[] ParseTextures()
         {
 #if false
             var textureNodes = GetArray("textures");
@@ -63,9 +103,10 @@ namespace BGL.GLTF
                 Textures[i] = new Texture(textureNodes[i]);
             }
 #endif
+            return null;
         }
 
-        private void ParseBuffers()
+        private Model.Buffer[] ParseBuffers()
         {
 #if false
             var bufferNodes = GetArray("buffers");
@@ -75,21 +116,13 @@ namespace BGL.GLTF
                 Buffers[i] = new Buffer(bufferNodes[i]);
             }
 #endif
-        }
-
-        private Json.JsonElement root;
-
-        private void LoadDocument(in string path)
-        {
-            System.IO.FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open);
-            System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(stream);
-            root = document.RootElement;
+            return null;
         }
 
         private Json.JsonElement[] GetArray(in string name)
         {
             Json.JsonElement arrayNode;
-            if (!root.TryGetProperty(name, out arrayNode))
+            if (!_root.TryGetProperty(name, out arrayNode))
             {
                 return new Json.JsonElement[0];
             }

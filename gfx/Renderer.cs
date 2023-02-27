@@ -1,11 +1,8 @@
-
 using OpenTK.Graphics.OpenGL;
 
+using OpenTK.Windowing.Desktop; // GameWindow
 
-using OpenTK.Windowing.Desktop;  // GameWindow
-
-
-using OpenTK.Windowing.Common;  // events
+using OpenTK.Windowing.Common; // events
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -13,7 +10,7 @@ namespace bgl
 {
     public class Renderer
     {
-        private static bgl.ShaderProgram program; 
+        private static bgl.ShaderProgram program;
 
         public static void Draw()
         {
@@ -27,7 +24,4 @@ namespace bgl
     }
 
     //using GL = OpenTK.Graphics.OpenGL.GL;
-
-
-
-}  // namespace bgl
+} // namespace bgl

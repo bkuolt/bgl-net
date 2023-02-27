@@ -11,15 +11,18 @@ namespace BGL.GLTF
         public Material[] Materials;
         public Texture[] Textures;
         public Buffer[] Buffers;
+        public Accessor[] Accessors;
+        public BufferView[] BufferViews;
+        public Node[] Nodes;
 
         // TODO: scene
         // TODO: nodes
-        // TODO: buffer views
-        // TODO: image views
         // TODO: cameras
 
         /* --------------------------------------------------------------- */
-
+        public class Node {
+            // TODO
+        }
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-buffer
         public class Buffer
@@ -72,6 +75,8 @@ namespace BGL.GLTF
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-image
         public class Image { }
+
+        // TODO: ImageView
 
         public class Texture { }
 
