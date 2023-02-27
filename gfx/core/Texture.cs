@@ -51,7 +51,7 @@ namespace bgl
     {
         public static Texture? Load(in string path)
         {
-            Image image = new Image();  /////// TODODODODOO"!!!!!!!! Image.FromFile(path);
+            Image image = new Image("");  /////// TODODODODOO"!!!!!!!! Image.FromFile(path);
                                         // var format = GetPixelFormat(image);
                                         //   var type = GetPixelType(image);
             byte[] pixels = new byte[0];  // TODO
