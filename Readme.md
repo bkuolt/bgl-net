@@ -1,4 +1,6 @@
 # About
+![](/screenshot.png)
+
 Minimalstic GLTF2 model viewer for __.NET__.  
 ## Features
 - GLTF2 Support
