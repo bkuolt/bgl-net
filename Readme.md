@@ -1,5 +1,5 @@
 # About
-Minimalstic GLTF2 model viewer for __.NET__.  
+Minimalistic GLTF2 model viewer for __.NET__.  
 ## Features
 - GLTF2 Support
 - minimalistic rendering and parsing code
