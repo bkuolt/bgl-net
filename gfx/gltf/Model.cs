@@ -28,64 +28,74 @@ namespace BGL.GLTF
             // TODO
         }
 
-        //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-buffer
-        public class Buffer
-        {
-            string uri;
-            int byteLength;
-            string name;
-
-            Json.JsonElement extensions;
-            string extras; 
-
-            // TODO: GetData()
-
+        public abstract class Object {
+            public Json.JsonElement Extensions;
+            public string Extras;
         }
 
-        // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-bufferview
-
-        public class BufferView
+        //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-buffer
+        public class Buffer : Object
         {
-            int buffer;
-            int byteOffset;
-            int byteLength;
-            int byteStride;
-            int target;
-            string name;
+            public string Uri;
+            public int ByteLength;
+            public string Name;
 
-            Json.JsonElement extensions;
-            string extras;
-            // TODO
+            // TODO: GetData()
+        }
+
+        // 
+
+        /// <summary>
+        /// TODO
+        /// <a href="https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-bufferview">See more</a>
+        /// </summary>
+        public class BufferView : Object
+        {
+            int Buffer;
+            int ByteOffset;
+            int ByteLength;
+            int ByteStride;
+            int Target;
+            string Name;
         }
 
         // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-accessor
-        public class Accessor
+        public class Accessor : Object
         {
-            int bufferView;
-            int byteOffset;
-            int componentType;
-            bool normalized;
-            int count;
-            string type;
-            float max;
-            float min;
+            public int bufferView;
+            public int byteOffset;
+            public int componentType;
+            public bool normalized;
+            public int count;
+            public string type;  // TODO
+            public float max;
+            public float min;
+            public SparseAccesor Sparse ;
 
-            // TODO: sparse
-
-            Json.JsonElement extensions;
-            string extras;
+            public class SparseAccesor {
+                // TODO
+            }
         }
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-mesh
         //See <a href="link">this link</a>
-        public class Mesh { }
+        public class Mesh {
+            // TODO
+        }
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-image
-        public class Image { }
+        public class Image {
+            // TODO
+        }
 
-        // TODO: ImageView
+        class ImageView {
 
-        public class Texture { }
+        }
+
+        /* */
+        public class Texture {
+            // TODO
+        }
 
         // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo
         public class TextureInfo
