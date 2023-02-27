@@ -88,4 +88,6 @@ namespace bgl
 
         private static Dictionary<string, ImageLoader> loaders;
     }
+
+    // TODO: tests
 }
