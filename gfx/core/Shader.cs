@@ -5,7 +5,6 @@ using OpenGL = OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
-
     class Shader
     {
         private int handle;
@@ -17,6 +16,7 @@ namespace bgl
             LoadSource(path);
             Compile();
         }
+
         ~Shader()
         {
             GL.DeleteShader(handle);
@@ -32,9 +32,12 @@ namespace bgl
 
             switch (extension)
             {
-                case ".fs": return ShaderType.VertexShader;
-                case ".vs": return ShaderType.FragmentShader;
-                case ".gs": return ShaderType.GeometryShader;
+                case ".fs":
+                    return ShaderType.VertexShader;
+                case ".vs":
+                    return ShaderType.FragmentShader;
+                case ".gs":
+                    return ShaderType.GeometryShader;
             }
 
             throw new System.Exception("could not determine vertex type");
@@ -57,7 +60,6 @@ namespace bgl
         }
     };
 
-
     public class ShaderProgram
     {
         public ShaderProgram()
@@ -68,7 +70,8 @@ namespace bgl
         public ShaderProgram(in string[] paths)
             : base()
         {
-            foreach (var path in paths) {
+            foreach (var path in paths)
+            {
                 Shader shader = new Shader(path);
                 Attach(shader);
             }
@@ -80,7 +83,10 @@ namespace bgl
             GL.DeleteProgram(handle);
         }
 
-        private void Attach(/* in OpenGL.ShaderType type,*/ in Shader shader) {
+        private void Attach( /* in OpenGL.ShaderType type,*/
+            in Shader shader
+        )
+        {
             GL.AttachShader(handle, shader);
         }
 
@@ -91,7 +97,8 @@ namespace bgl
             int linkStatus;
             GL.GetProgram(handle, OpenGL.GetProgramParameterName.LinkStatus, out linkStatus);
 
-            if (linkStatus == 0) {
+            if (linkStatus == 0)
+            {
                 byte[] buffer = new byte[4096];
                 string infoLog;
                 int length;
@@ -106,13 +113,11 @@ namespace bgl
         }
 
         private int handle;
-
     };
 
     public class UniformBuffer : Buffer
     {
         public UniformBuffer(in byte[] data)
-            : base(OpenGL.BufferTarget.UniformBuffer, data)
-        { }
+            : base(OpenGL.BufferTarget.UniformBuffer, data) { }
     }
 }

@@ -9,7 +9,8 @@ namespace bgl
 {
     public class Image
     {
-        public byte[] Data {
+        public byte[] Data
+        {
             get => _data;
         }
         public uint Width;
@@ -18,21 +19,23 @@ namespace bgl
         public readonly OpenGL.PixelFormat Format = OpenGL.PixelFormat.Rgba;
         public readonly OpenGL.PixelType Type = OpenGL.PixelType.Byte;
 
-
-        System.IO.MemoryStream CreateMemoryStream(uint width, uint height) {
+        System.IO.MemoryStream CreateMemoryStream(uint width, uint height)
+        {
             _data = new byte[Width * Height * 4];
             return new System.IO.MemoryStream(_data);
         }
+
         public Image(in string path)
         {
-            FREE_IMAGE_FORMAT format = FreeImage.GetFileType(path, 0 /* unused */);
-            if (format == FREE_IMAGE_FORMAT.FIF_UNKNOWN) {
-
-            }
+            FREE_IMAGE_FORMAT format = FreeImage.GetFileType(
+                path,
+                0 /* unused */
+            );
+            if (format == FREE_IMAGE_FORMAT.FIF_UNKNOWN) { }
             FIBITMAP _bitmap = FreeImage.Load(format, path, 0);
             _bitmap = FreeImage.ConvertTo32Bits(_bitmap);
             _bitmap = FreeImage.ConvertToType(_bitmap, FREE_IMAGE_TYPE.FIT_BITMAP, true);
-            
+
             Width = FreeImage.GetWidth(_bitmap);
             Height = FreeImage.GetHeight(_bitmap);
             const int channels = 4;
@@ -58,9 +61,9 @@ namespace bgl
             FreeImage.Unload(_bitmap);
         }
 #endif
-        ~Image() {}
+        ~Image() { }
 
-        private byte[] _data;        
+        private byte[] _data;
     }
 
     public interface ImageLoader

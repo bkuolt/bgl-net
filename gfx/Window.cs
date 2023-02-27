@@ -1,18 +1,20 @@
-
 using OpenTK.Graphics.OpenGL;
 
-using OpenTK.Windowing.Desktop;  // GameWindow
+using OpenTK.Windowing.Desktop; // GameWindow
 
-using OpenTK.Windowing.Common;  // events
+using OpenTK.Windowing.Common; // events
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace bgl
 {
-
     public class Window : GameWindow
     {
-        public Window(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
+        public Window(int width, int height, string title)
+            : base(
+                GameWindowSettings.Default,
+                new NativeWindowSettings() { Size = (width, height), Title = title }
+            )
         {
             // TODO
         }
@@ -41,5 +43,4 @@ namespace bgl
             GL.Viewport(0, 0, e.Width, e.Height);
         }
     }
-
-}  // namespace bgl
+} // namespace bgl

@@ -48,13 +48,10 @@ namespace wpf_demo
             {
                 //return GetTypeSize(type) * 
                 return 0;
-
             }
 
             BufferView bufferView;
         };
-
-
 
         class Buffer
         {
