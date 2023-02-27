@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace bgl.gltf {
 
-public class Model : bgl.Model {
+public class Model {
     // TODO
    // private:
 

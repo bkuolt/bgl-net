@@ -21,6 +21,8 @@ namespace bgl
             Upload(pixels, width, height, format, type);
         }
 
+        // TODO: set sampler
+
         ~Texture()
         {
             GL.DeleteTexture(handle);

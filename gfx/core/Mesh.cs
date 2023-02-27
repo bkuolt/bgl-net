@@ -1,8 +1,11 @@
 using OpenTK.Graphics.OpenGL;
 using OpenGL = OpenTK.Graphics.OpenGL;
 
+
 namespace bgl
 {
+    using Matrix4D = OpenTK.Mathematics.Matrix4;
+
     public class VertexBuffer : Buffer
     {
         public VertexBuffer(byte[] data)
@@ -33,7 +36,7 @@ namespace bgl
         {
             // TODO
         }
-        public void Draw()
+        public void Draw(Matrix4D w, Matrix4D s)
         {
             vertexArray.Bind();
             GL.DrawElements(primitiveType, (int)indexAcessor.Count, OpenGL.DrawElementsType.UnsignedInt, indexAcessor.BufferView.Offset);
