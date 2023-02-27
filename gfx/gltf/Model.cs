@@ -8,6 +8,7 @@ public class Model {
    // private:
 
     public  class Mesh {
+        // JSON.
         // TODO
     }
 
@@ -30,6 +31,14 @@ public class Model {
     public class BufferView {
         // TODO
     }
+
+    Model(in string path) {
+
+
+        // 
+    }
+
+
 
 }
 

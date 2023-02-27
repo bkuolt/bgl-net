@@ -22,8 +22,6 @@ public class Scene {
             this.Parent = parent;
         }
 
-
-
         public void Draw(in Matrix4D viewMatrix)
         {
             foreach (Mesh mesh in Meshes) {
