@@ -14,13 +14,17 @@ namespace BGL.GLTF
         public Accessor[] Accessors;
         public BufferView[] BufferViews;
         public Node[] Nodes;
+        public Camera[] Cameras;
 
         // TODO: scene
-        // TODO: nodes
         // TODO: cameras
 
         /* --------------------------------------------------------------- */
         public class Node {
+            // TODO
+        }
+
+        public class Camera {
             // TODO
         }
 
@@ -32,7 +36,10 @@ namespace BGL.GLTF
             string name;
 
             Json.JsonElement extensions;
-            string extras;
+            string extras; 
+
+            // TODO: GetData()
+
         }
 
         // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-bufferview

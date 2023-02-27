@@ -13,14 +13,7 @@ namespace BGL.GLTF
             LoadDocument(in path);
         }
 
-        private void LoadDocument(in string path)
-        {
-            System.IO.FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open);
-            System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(stream);
-            _root = document.RootElement;
-        }
-
-        private void Parse()
+        public GLTF.Model Parse()
         {
             var model = new GLTF.Model();
 
@@ -32,25 +25,38 @@ namespace BGL.GLTF
             model.BufferViews = ParseBufferViews();
             model.Meshes = ParseMeshes();
             model.Nodes = ParseNodes();
+
+            return model;
+        }
+
+        private void LoadDocument(in string path)
+        {
+            System.IO.FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open);
+            System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(stream);
+            _root = document.RootElement;
         }
 
         /* ----------------------------------------------------------------------------------  */
-        Model.Accessor[] ParseAccessors()
-        {
-            return null; /* TODO */
-        }
 
-        Model.BufferView[] ParseBufferViews()
-        {
-            return null; /* TODO */
-        }
-
-        Model.Node[] ParseNodes()
+        Model.Image ParseImage(in Json.JsonElement element)
         {
             return null; // TODO
         }
 
-        /* ----------------------------------------------------------------------------------  */
+        Model.Texture ParseTexture(in Json.JsonElement element)
+        {
+            return null; // TODO
+        }
+
+        Model.Buffer ParseBuffer(in Json.JsonElement element)
+        {
+            return null; // TODO
+        }
+
+        Model.BufferView ParseBufferView(in Json.JsonElement element)
+        {
+            return null; // TODO
+        }
 
         /* ----------------------------------------------------------------------------------  */
 
@@ -142,5 +148,34 @@ namespace BGL.GLTF
         {
             return null; // TODO
         }
+
+        Model.Accessor[] ParseAccessors()
+        {
+            return null; /* TODO */
+        }
+
+        Model.BufferView[] ParseBufferViews()
+        {
+            return null; /* TODO */
+        }
+
+        Model.Node[] ParseNodes()
+        {
+            return null; // TODO
+        }
+
+#if DEBUG
+        public static void Test()
+        {
+            try {
+                var parser = new GLTF.Parser("model.gltf");
+                var model = parser.Parse();
+            } catch (System.Exception e) {
+                System.Console.WriteLine("Could not load GLTF file: " + e.Message);
+            }
+
+            // TODO: print some info/stats
+        }
+#endif
     }
 }
