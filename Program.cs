@@ -16,6 +16,10 @@ namespace LearnOpenTK
             {
                 window.Run();
             }
+
+            // TODO:: enable console (WPF only) 
+            // TODO: test GLTF parser;
+            // TODO: show model information
         }
 
     }
