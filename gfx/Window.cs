@@ -39,7 +39,7 @@ namespace bgl
 
         protected override void OnResize(ResizeEventArgs e)
         {
-            base.OnResize(e);
+            base.OnResize(e);  // TODO: Renderer.Resize()
             GL.Viewport(0, 0, e.Width, e.Height);
         }
     }

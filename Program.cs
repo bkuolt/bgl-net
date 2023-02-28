@@ -6,7 +6,6 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
- 
     public static class Program
     {
         public static void Main()
