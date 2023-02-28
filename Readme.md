@@ -1,3 +1,4 @@
+[![.NET](https://github.com/bkuolt/bgl-net/actions/workflows/dotnet.yml/badge.svg)](https://github.com/bkuolt/bgl-net/actions/workflows/dotnet.yml)
 # About
 Minimalistic GLTF2 model viewer for __.NET__.  
 ## Features
