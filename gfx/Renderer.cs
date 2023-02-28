@@ -22,24 +22,6 @@ namespace bgl
             // crashes --> program = new bgl.ShaderProgram( new string[]{ "Shader/shader.vs" });
         }
 
-#if DEBUG && false
-        public static void Test()
-        {
-            try
-            {
-                var parser = new GLTF.Parser("model.gltf");
-                var model = parser.Parse();
-            }
-            catch (System.Exception e)
-            {
-                System.Console.WriteLine("Could not load GLTF file: " + e.Message);
-            }
-
-            // TODO: print some info/stats
-        }
-        
-        /* ----------------------------------------------------------------------------------  */
-#endif
     }
 
     //using GL = OpenTK.Graphics.OpenGL.GL;

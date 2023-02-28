@@ -21,8 +21,28 @@ namespace BGL.GLTF
             return JsonSerializer.Deserialize<GLTF.Model>(_document, options);
         }
 
-        /* ----------------------------------------------------------------------------------  */
+        private byte[] LoadBuffer(in Model.Buffer buffer) {
+            return null;
+        }
+        private byte[] LoadImage(in Model.Image image) {
+            return null;
+        }
 
+#if DEBUG
+        public static void Test()
+        {
+            try
+            {
+                Parser parser = new Parser("model.gltf");
+                Model model = parser.Parse();
+                System.Console.WriteLine(model.ToString());
+            }
+            catch (System.Exception exception)
+            {
+                System.Console.WriteLine(exception.Message);
+            }
+        }
+#endif
         private readonly JsonElement _document;
     }
 }

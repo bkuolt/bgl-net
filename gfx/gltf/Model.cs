@@ -16,9 +16,8 @@ namespace BGL.GLTF
         public BufferView[] BufferViews;
         public Node[] Nodes;
         public Camera[] Cameras;
-
-        // TODO: public Scene[] Scene;
-
+        public Scene[] Scenes;
+    
         /* --------------------------------------------------------------- */
         public abstract class Object
         {
@@ -77,8 +76,6 @@ namespace BGL.GLTF
             public string Uri;
             public int ByteLength;
             public string Name;
-
-            // TODO: GetData()
         }
 
         /// <summary>
@@ -193,5 +190,11 @@ namespace BGL.GLTF
                 public TextureInfo MetallicRoughnessTexture;
             }
         }
+        
+        public override string ToString()
+        {
+            return "";  // TODO
+        }
     }
+
 } // namespace bgl
