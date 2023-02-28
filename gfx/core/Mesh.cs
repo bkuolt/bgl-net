@@ -1,7 +1,6 @@
 using OpenTK.Graphics.OpenGL;
 using OpenGL = OpenTK.Graphics.OpenGL;
 
-
 namespace bgl
 {
     using Matrix4D = OpenTK.Mathematics.Matrix4;
@@ -9,23 +8,25 @@ namespace bgl
     public class VertexBuffer : Buffer
     {
         public VertexBuffer(byte[] data)
-            : base(BufferTarget.ElementArrayBuffer, data)
-        { }
+            : base(BufferTarget.ElementArrayBuffer, data) { }
     }
+
     public class IndexBuffer : Buffer
     {
         public IndexBuffer(byte[] data)
-            : base(BufferTarget.ArrayBuffer, data)
-        { }
+            : base(BufferTarget.ArrayBuffer, data) { }
     }
 
     public class Mesh
     {
-        public Mesh() {}
-        public Mesh(in BufferView vertexBufferView,
-                    in BufferView indexBufferView,
-                    in VertexArray vao,
-                    OpenGL.PrimitiveType primitiveType)
+        public Mesh() { }
+
+        public Mesh(
+            in BufferView vertexBufferView,
+            in BufferView indexBufferView,
+            in VertexArray vao,
+            OpenGL.PrimitiveType primitiveType
+        )
         {
             //        vertexBufferView = new BufferView();
             //       indexBufferView = new BufferView();
@@ -36,10 +37,16 @@ namespace bgl
         {
             // TODO
         }
+
         public void Draw(Matrix4D w, Matrix4D s)
         {
             vertexArray.Bind();
-            GL.DrawElements(primitiveType, (int)indexAcessor.Count, OpenGL.DrawElementsType.UnsignedInt, indexAcessor.BufferView.Offset);
+            GL.DrawElements(
+                primitiveType,
+                (int)indexAcessor.Count,
+                OpenGL.DrawElementsType.UnsignedInt,
+                indexAcessor.BufferView.Offset
+            );
         }
 
         private Accessor indexAcessor;
@@ -49,5 +56,4 @@ namespace bgl
         private OpenGL.PrimitiveType primitiveType;
         private Material? material;
     };
-
 }

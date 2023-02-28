@@ -1,7 +1,7 @@
 using System.Text.Json;
+using System.Collections.Generic;
 
-
-namespace bgl.gltf
+namespace BGL.GLTF
 {
     using Json = System.Text.Json;
 
@@ -12,150 +12,169 @@ namespace bgl.gltf
         public Material[] Materials;
         public Texture[] Textures;
         public Buffer[] Buffers;
+        public Accessor[] Accessors;
+        public BufferView[] BufferViews;
+        public Node[] Nodes;
+        public Camera[] Cameras;
 
-        // TODO: scene
-        // TODO: nodes
-        // TODO: buffer views
-        // TODO: image views
-        // TODO: cameras
-
-
-        public Model(in string path)
-        {
-            LoadDocument(in path);
-        
-            ParseImages();
-            ParseMeshes();
-            ParseMaterials();
-            ParseTextures();
-            ParseBuffers();
-        }
-
-        private void ParseImages()
-        {
-            var imageNodes = GetArray("images");
-            Images = new Image[imageNodes.Length];
-            for (uint i = 0; i < imageNodes.Length; ++i)
-            {
-                Images[i] = new Image(imageNodes[i]);
-            }
-        }
-
-        private void ParseMeshes()
-        {
-            var meshNodes = GetArray("meshes");
-            Meshes = new Mesh[meshNodes.Length];
-            for (uint i = 0; i < meshNodes.Length; ++i)
-            {
-                Meshes[i] = new Mesh(meshNodes[i]);
-            }
-        }
-
-        private void ParseMaterials()
-        {
-            var materialNodes = GetArray("materials");
-            Materials = new Material[materialNodes.Length];
-            for (uint i = 0; i < materialNodes.Length; ++i)
-            {
-                Materials[i] = new Material(materialNodes[i]);
-            }
-        }
-
-        private void ParseTextures()
-        {
-            var textureNodes = GetArray("textures");
-            Textures = new Texture[textureNodes.Length];
-            for (uint i = 0; i < textureNodes.Length; ++i)
-            {
-                Textures[i] = new Texture(textureNodes[i]);
-            }
-        }
-
-        private void ParseBuffers()
-        {
-            var bufferNodes = GetArray("buffers");
-            Buffers = new Buffer[bufferNodes.Length];
-            for (uint i = 0; i < bufferNodes.Length; ++i)
-            {
-                Buffers[i] = new Buffer(bufferNodes[i]);
-            }
-        }
+        // TODO: public Scene[] Scene;
 
         /* --------------------------------------------------------------- */
-        public class Buffer
+        public abstract class Object
         {
-            public Buffer(in Json.JsonElement element)
+            public Json.JsonElement Extensions;
+            public string Extras;
+        }
+
+        // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-scene
+        public class Scene : Object
+        {
+            public int[] Nodes; // indices of each root node
+            public string Name;
+        }
+
+        public class Node : Object
+        {
+            public int? Camera;
+            public int[] Children;
+            public int? Skin;
+            public float[] Matrix;
+            public int Mesh;
+            public float[] Rotation;
+            public float[] Scale;
+            public float[] Translation;
+            public float[]? Weights;
+            public string Name;
+        }
+
+        public class Camera : Object
+        {
+            public OrthographicCamera? Orthographic;
+            public PerspectiveCamera? Perspective;
+            public string Type;
+            public string Name;
+        }
+
+        public class OrthographicCamera : Object
+        {
+            public float XMag;
+            public float YMag;
+            public float ZFar;
+            public float ZNear;
+        }
+
+        public class PerspectiveCamera : Object
+        {
+            public float AspectRatio;
+            public float YFov;
+            public float YFar;
+            public float ZNear;
+        }
+
+        //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-buffer
+        public class Buffer : Object
+        {
+            public string Uri;
+            public int ByteLength;
+            public string Name;
+
+            // TODO: GetData()
+        }
+
+        /// <summary>
+        /// TODO
+        /// <a href="https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-bufferview">See more</a>
+        /// </summary>
+        public class BufferView : Object
+        {
+            public int Buffer;
+            public int ByteOffset;
+            public int ByteLength;
+            public int ByteStride;
+            public int Target;
+            public string Name;
+        }
+
+        // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-accessor
+        public class Accessor : Object
+        {
+            public int BufferView;
+            public int ByteOffset;
+            public int ComponentType;
+            public bool Normalized;
+            public int Count;
+            public string Type;
+            public float Max;
+            public float Min;
+            public SparseAccesor Sparse;
+
+            public class SparseAccesor
             {
                 // TODO
             }
         }
 
-        public class Accessor
-        {
-            // TODO
-        }
-
-        public class BufferView
-        {
-            // TODO
-        }
-
+        //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-mesh
+        //See <a href="link">this link</a>
         public class Mesh
         {
-            public Mesh(in Json.JsonElement element)
+            public Primitive[] Primitives;
+            public float[] Weights;
+            public string Name;
+
+            public class Primitive : Object
             {
-                // TODO
-            }
-        }
-        public class Image
-        {
-            public Image(in Json.JsonElement element)
-            {
-                // TODO
-            }
-        }
-        public class Texture
-        {
-            public Texture(in Json.JsonElement element)
-            {
-                // TODO
+                public Dictionary<string, int> Attributes;
+                public int indices;
+                public int Material;
+                public int Mode;
+                public int[] Targets; // morph targets
             }
         }
 
-        public class TextureInfo
+        //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-image
+        public class Image : Object
         {
-            public uint Index;  // texture index
+            public string Uri;
+            public string MimeType;
+            public int BufferView;
+        }
+
+        public class Texture : Object
+        {
+            public int Sampler;
+            public int Source;
+            public string Name;
+        }
+
+        // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-sampler
+        public class Sampler : Object
+        {
+            public int? MagFilter;
+            public int? MinFilter;
+            public int WrapS;
+            public int WrapT;
+            public string name;
+        }
+
+        // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo
+        public class TextureInfo : Object
+        {
+            public uint Index; // texture index
             public int TexCoord;
-
-            public TextureInfo(in Json.JsonElement element)
-            {
-                // TODO
-            }
         }
 
         public class NormalTextureInfo : TextureInfo
         {
             public float Scale = 1.0f;
-
-            public NormalTextureInfo(in Json.JsonElement element)
-                : base(element)
-            {
-                // TODO
-            }
         }
 
         public class OclusionTextureInfo : TextureInfo
         {
             public float Strength = 1.0f;
-
-            public OclusionTextureInfo(in Json.JsonElement element)
-                : base(element)
-            {
-                // TODO
-            }
         }
 
-        public class Material
+        public class Material : Object
         {
             public MetallicRoughness PBRMetallicRoughness;
             public NormalTextureInfo NormalTexture;
@@ -166,79 +185,13 @@ namespace bgl.gltf
             public float AlphaCutoff = 0.5f;
             public bool DoubleSided = false;
 
-            public Material(in Json.JsonElement element)
+            public class MetallicRoughness : Object
             {
-                // TODO
+                public float[] BaseColorFactor;
+                public float MetallicFactor;
+                public float RoughnessFactor;
+                public TextureInfo MetallicRoughnessTexture;
             }
-
-            public record MetallicRoughness
-            {
-                float[] baseColorFactor;
-                float metallicFactor;
-                float roughnessFactor;
-                TextureInfo metallicRoughnessTexture;
-            }
-        }
-
-
-
-        private void LoadNodes()
-        {
-
-        }
-
-        private Json.JsonElement root;
-
-        private void LoadDocument(in string path)
-        {
-            System.IO.FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open);
-            System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(stream);
-            root = document.RootElement;
-        }
-
-        private Json.JsonElement[] GetArray(in string name)
-        {
-            Json.JsonElement arrayNode;
-            if (!root.TryGetProperty(name, out arrayNode))
-            {
-                return new Json.JsonElement[0];
-            }
-
-            int size = arrayNode.GetArrayLength();
-            Json.JsonElement[] array = new Json.JsonElement[size];
-            uint index = 0;
-            foreach (var node in arrayNode.EnumerateArray())
-            {
-                array[index++] = node;
-            }
-
-            return array;
-        }
-
-        private Json.JsonElement[] GetProperty(in string name)
-        {
-            return null;  // TODO
-        }
-
-
-        void Test()
-        {
-#if false
-        for (int i = 0; i < materials.GetArrayLength(); ++i) {
-            var material = materials[i];
-            string name =  material.GetProperty("name").ToString();
-            // TODO: aonymous functions
-
-            string normalTextureTexture =  material.GetProperty("normalTexture").ToString();
-            string occlusionTextureTexture =  material.GetProperty("occlusionTexture").ToString();
-            string metallicRoughnessTexture =  material.GetProperty("pbrMetallicRoughness").ToString();
-            string emissiveTextureTexture =  material.GetProperty("emissiveTexture").ToString();
-
-            // TODO: number indices
-            // TODO: number vertices
-        }
-#endif
         }
     }
-
-}
+} // namespace bgl

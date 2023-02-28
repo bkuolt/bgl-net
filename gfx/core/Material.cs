@@ -3,7 +3,6 @@ using OpenGL = OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
-
     public class Material
     {
         public readonly Texture[] Textures;
@@ -15,15 +14,14 @@ namespace bgl
             // TODO
         }
 
-        public Material() 
+        public Material()
         {
             // TODO
         }
 
-
         public void Bind()
         {
-            int unit = (int) OpenGL.TextureUnit.Texture0;
+            int unit = (int)OpenGL.TextureUnit.Texture0;
             for (uint index = 0; index < Textures.Length; ++index, ++unit)
             {
                 GL.BindTextureUnit(unit, Textures[index]);
@@ -31,6 +29,4 @@ namespace bgl
             UniformBuffer.Bind();
         }
     }
-
-
 }

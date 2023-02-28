@@ -20,18 +20,14 @@ namespace bgl
         int byteOffset;
     }
 
-
-    public class PrimitiveList {
-
-    }
-
+    public class PrimitiveList { }
 
     public class VertexArray
     {
         public VertexArray(in Accessor[] acccesors)
         {
             // TODO: ceate VAO
-            // TODO bind ibo 
+            // TODO bind ibo
             // TODO bind vbo
             GL.BindVertexArray(handle);
 
@@ -41,10 +37,7 @@ namespace bgl
             }
         }
 
-        ~VertexArray()
-        {
-
-        }
+        ~VertexArray() { }
 
         public void Bind()
         {
@@ -54,9 +47,17 @@ namespace bgl
         private void SetAttribute(in uint index, in Accessor accessor)
         {
             GL.EnableVertexAttribArray(index);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            GL.VertexAttribPointer(
+                0,
+                3,
+                VertexAttribPointerType.Float,
+                false,
+                3 * sizeof(float),
+                0
+            );
             // TODO
         }
+
         private int handle;
     }
 
@@ -65,19 +66,25 @@ namespace bgl
         private int handle;
         public readonly OpenGL.BufferTarget target;
 
-        public Buffer(OpenGL.BufferTarget target, byte[] data, BufferUsageHint usageHint = BufferUsageHint.DynamicDraw)
+        public Buffer(
+            OpenGL.BufferTarget target,
+            byte[] data,
+            BufferUsageHint usageHint = BufferUsageHint.DynamicDraw
+        )
         {
             this.handle = GL.GenBuffer();
             this.target = target;
             GL.BindBuffer(target, handle);
             GL.BufferData(target, data.Length, data, usageHint);
         }
+
         ~Buffer()
         {
             GL.DeleteBuffer(handle);
         }
 
-        public void Bind() {
+        public void Bind()
+        {
             // TODO
         }
 
