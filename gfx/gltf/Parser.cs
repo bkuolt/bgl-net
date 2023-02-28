@@ -38,139 +38,140 @@ namespace BGL.GLTF
 
         /* ----------------------------------------------------------------------------------  */
 
-        Model.Image ParseImage(in Json.JsonElement element)
-        {
-            return null; // TODO
-        }
-
-        Model.Texture ParseTexture(in Json.JsonElement element)
-        {
-            return null; // TODO
-        }
-
-        Model.Buffer ParseBuffer(in Json.JsonElement element)
-        {
-            return null; // TODO
-        }
-
-        Model.BufferView ParseBufferView(in Json.JsonElement element)
-        {
-            return null; // TODO
-        }
-
-        /* ----------------------------------------------------------------------------------  */
-
         private Model.Image[] ParseImages()
         {
-#if false
-            var imageNodes = GetArray("images");
-            Images = new Image[imageNodes.Length];
-            for (uint i = 0; i < imageNodes.Length; ++i)
+            try
             {
-                Images[i] = new Image(imageNodes[i]);
+                JsonElement arrayNode = GetProperty("images");
+                return JsonSerializer.Deserialize<Model.Image[]>(arrayNode);
             }
-#endif
-            return null;
+            catch (System.Exception e)
+            {
+                // TODO: handle error
+                return new Model.Image[0];
+            }
         }
 
         private Model.Mesh[] ParseMeshes()
         {
-#if false
-            var meshNodes = GetArray("meshes");
-            Meshes = new Mesh[meshNodes.Length];
-            for (uint i = 0; i < meshNodes.Length; ++i)
+            try
             {
-                Meshes[i] = new Mesh(meshNodes[i]);
+                JsonElement arrayNode = GetProperty("meshes");
+                return JsonSerializer.Deserialize<Model.Mesh[]>(arrayNode);
             }
-#endif
-            return null;
+            catch (System.Exception e)
+            {
+                // TODO: handle error
+                return new Model.Mesh[0];
+            }
         }
 
         private Model.Material[] ParseMaterials()
         {
-#if false
-            var materialNodes = GetArray("materials");
-            Materials = new Material[materialNodes.Length];
-            for (uint i = 0; i < materialNodes.Length; ++i)
+            try
             {
-                Materials[i] = new Material(materialNodes[i]);
+                JsonElement arrayNode = GetProperty("materials");
+                return JsonSerializer.Deserialize<Model.Material[]>(arrayNode);
             }
-#endif
-            return null;
+            catch (System.Exception e)
+            {
+                // TODO: handle error
+                return new Model.Material[0];
+            }
         }
 
         private Model.Texture[] ParseTextures()
         {
-#if false
-            var textureNodes = GetArray("textures");
-            Textures = new Texture[textureNodes.Length];
-            for (uint i = 0; i < textureNodes.Length; ++i)
+            try
             {
-                Textures[i] = new Texture(textureNodes[i]);
+                JsonElement arrayNode = GetProperty("materials");
+                return JsonSerializer.Deserialize<Model.Texture[]>(arrayNode);
             }
-#endif
-            return null;
+            catch (System.Exception e)
+            {
+                // TODO: handle error
+                return new Model.Texture[0];
+            }
         }
 
         private Model.Buffer[] ParseBuffers()
         {
-#if false
-            var bufferNodes = GetArray("buffers");
-            Buffers = new Buffer[bufferNodes.Length];
-            for (uint i = 0; i < bufferNodes.Length; ++i)
+            try
             {
-                Buffers[i] = new Buffer(bufferNodes[i]);
+                JsonElement arrayNode = GetProperty("buffers");
+                return JsonSerializer.Deserialize<Model.Buffer[]>(arrayNode);
             }
-#endif
-            return null;
-        }
-
-        private Json.JsonElement[] GetArray(in string name)
-        {
-            Json.JsonElement arrayNode;
-            if (!_root.TryGetProperty(name, out arrayNode))
+            catch (System.Exception e)
             {
-                return new Json.JsonElement[0];
+                // TODO: handle error
+                return new Model.Buffer[0];
             }
+        }
 
-            int size = arrayNode.GetArrayLength();
-            Json.JsonElement[] array = new Json.JsonElement[size];
-            uint index = 0;
-            foreach (var node in arrayNode.EnumerateArray())
+        private Model.Accessor[] ParseAccessors()
+        {
+            try
             {
-                array[index++] = node;
+                JsonElement arrayNode = GetProperty("accessors");
+                return JsonSerializer.Deserialize<Model.Accessor[]>(arrayNode);
             }
-
-            return array;
+            catch (System.Exception e)
+            {
+                // TODO: handle error
+                return new Model.Accessor[0];
+            }
         }
 
-        private Json.JsonElement[] GetProperty(in string name)
+        private Model.BufferView[] ParseBufferViews()
         {
-            return null; // TODO
+            try
+            {
+                JsonElement arrayNode = GetProperty("bufferViews");
+                return JsonSerializer.Deserialize<Model.BufferView[]>(arrayNode);
+            }
+            catch (System.Exception e)
+            {
+                // TODO: handle error
+                return new Model.BufferView[0];
+            }
         }
 
-        Model.Accessor[] ParseAccessors()
+        private Model.Node[] ParseNodes()
         {
-            return null; /* TODO */
+            try
+            {
+                JsonElement arrayNode = GetProperty("nodes");
+                return JsonSerializer.Deserialize<Model.Node[]>(arrayNode);
+            }
+            catch (System.Exception e)
+            {
+                // TODO: handle error
+                return new Model.Node[0];
+            }
         }
 
-        Model.BufferView[] ParseBufferViews()
-        {
-            return null; /* TODO */
-        }
+        /* ----------------------------------------------------------------------------------  */
 
-        Model.Node[] ParseNodes()
+        private Json.JsonElement GetProperty(in string name)
         {
-            return null; // TODO
+            Json.JsonElement value;
+            if (!_root.TryGetProperty(name, out value))
+            {
+                return new Json.JsonElement();
+            }
+            return value;
         }
 
 #if DEBUG
         public static void Test()
         {
-            try {
+            try
+            {
                 var parser = new GLTF.Parser("model.gltf");
                 var model = parser.Parse();
-            } catch (System.Exception e) {
+            }
+            catch (System.Exception e)
+            {
                 System.Console.WriteLine("Could not load GLTF file: " + e.Message);
             }
 

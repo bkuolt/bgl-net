@@ -1,5 +1,5 @@
 using System.Text.Json;
-
+using System.Collections.Generic;
 namespace BGL.GLTF
 {
     using Json = System.Text.Json;
@@ -81,20 +81,35 @@ namespace BGL.GLTF
         //See <a href="link">this link</a>
         public class Mesh {
             // TODO
+            Primitive[] primitivess
+            float[] weifhts;
+            string name;
+
+            class Primitive : Object {
+                Dictionary<string, int> attributes;
+                int indexAccessor;
+                int material;
+                int mode;
+                int[] targets;  // morph targets
+            }
         }
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-image
-        public class Image {
-            // TODO
-        }
-
-        class ImageView {
-
+        public class Image : Object{
+            string uri;
+            string mimeType;
+            int bufferView;
         }
 
         /* */
-        public class Texture {
-            // TODO
+        public class Texture : Object {
+            int sampler;
+            int source;
+            string name;
+
+            class Sampler {
+                // TODO
+            }   
         }
 
         // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo
