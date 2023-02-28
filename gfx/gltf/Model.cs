@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Collections.Generic;
+
 namespace BGL.GLTF
 {
     using Json = System.Text.Json;
@@ -16,21 +17,58 @@ namespace BGL.GLTF
         public Node[] Nodes;
         public Camera[] Cameras;
 
-        // TODO: scene
-        // TODO: cameras
+        // TODO: public Scene[] Scene;
 
         /* --------------------------------------------------------------- */
-        public class Node {
-            // TODO
-        }
-
-        public class Camera {
-            // TODO
-        }
-
-        public abstract class Object {
+        public abstract class Object
+        {
             public Json.JsonElement Extensions;
             public string Extras;
+        }
+
+        // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-scene
+        public class Scene : Object
+        {
+            public int[] Nodes; // indices of each root node
+            public string Name;
+        }
+
+        public class Node : Object
+        {
+            public int? Camera;
+            public int[] Children;
+            public int? Skin;
+            public float[] Matrix;
+            public int Mesh;
+            public float[] Rotation;
+            public float[] Scale;
+            public float[] Translation;
+            public float[]? Weights;
+            public string Name;
+        }
+
+        public class Camera : Object
+        {
+            public OrthographicCamera? Orthographic;
+            public PerspectiveCamera? Perspective;
+            public string Type;
+            public string Name;
+        }
+
+        public class OrthographicCamera : Object
+        {
+            public float XMag;
+            public float YMag;
+            public float ZFar;
+            public float ZNear;
+        }
+
+        public class PerspectiveCamera : Object
+        {
+            public float AspectRatio;
+            public float YFov;
+            public float YFar;
+            public float ZNear;
         }
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-buffer
@@ -43,77 +81,84 @@ namespace BGL.GLTF
             // TODO: GetData()
         }
 
-        // 
-
         /// <summary>
         /// TODO
         /// <a href="https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-bufferview">See more</a>
         /// </summary>
         public class BufferView : Object
         {
-            int Buffer;
-            int ByteOffset;
-            int ByteLength;
-            int ByteStride;
-            int Target;
-            string Name;
+            public int Buffer;
+            public int ByteOffset;
+            public int ByteLength;
+            public int ByteStride;
+            public int Target;
+            public string Name;
         }
 
         // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-accessor
         public class Accessor : Object
         {
-            public int bufferView;
-            public int byteOffset;
-            public int componentType;
-            public bool normalized;
-            public int count;
-            public string type;  // TODO
-            public float max;
-            public float min;
-            public SparseAccesor Sparse ;
+            public int BufferView;
+            public int ByteOffset;
+            public int ComponentType;
+            public bool Normalized;
+            public int Count;
+            public string Type;
+            public float Max;
+            public float Min;
+            public SparseAccesor Sparse;
 
-            public class SparseAccesor {
+            public class SparseAccesor
+            {
                 // TODO
             }
         }
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-mesh
         //See <a href="link">this link</a>
-        public class Mesh {
-            // TODO
-            Primitive[] primitivess
-            float[] weifhts;
-            string name;
+        public class Mesh
+        {
+            public Primitive[] Primitives;
+            public float[] Weights;
+            public string Name;
 
-            class Primitive : Object {
-                Dictionary<string, int> attributes;
-                int indexAccessor;
-                int material;
-                int mode;
-                int[] targets;  // morph targets
+            public class Primitive : Object
+            {
+                public Dictionary<string, int> Attributes;
+                public int indices;
+                public int Material;
+                public int Mode;
+                public int[] Targets; // morph targets
             }
         }
 
         //https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-image
-        public class Image : Object{
-            string uri;
-            string mimeType;
-            int bufferView;
+        public class Image : Object
+        {
+            public string Uri;
+            public string MimeType;
+            public int BufferView;
         }
 
-        /* */
-        public class Texture : Object {
-            int sampler;
-            int source;
-            string name;
+        public class Texture : Object
+        {
+            public int Sampler;
+            public int Source;
+            public string Name;
+        }
 
-            class Sampler {
-                // TODO
-            }   
+        // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-sampler
+        public class Sampler : Object
+        {
+            public int? MagFilter;
+            public int? MinFilter;
+            public int WrapS;
+            public int WrapT;
+            public string name;
         }
 
         // https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-textureinfo
-        public class TextureInfo
+        public class TextureInfo : Object
         {
             public uint Index; // texture index
             public int TexCoord;
@@ -129,7 +174,7 @@ namespace BGL.GLTF
             public float Strength = 1.0f;
         }
 
-        public class Material
+        public class Material : Object
         {
             public MetallicRoughness PBRMetallicRoughness;
             public NormalTextureInfo NormalTexture;
@@ -140,18 +185,13 @@ namespace BGL.GLTF
             public float AlphaCutoff = 0.5f;
             public bool DoubleSided = false;
 
-            public record MetallicRoughness
+            public class MetallicRoughness : Object
             {
-                float[] baseColorFactor;
-                float metallicFactor;
-                float roughnessFactor;
-                TextureInfo metallicRoughnessTexture;
+                public float[] BaseColorFactor;
+                public float MetallicFactor;
+                public float RoughnessFactor;
+                public TextureInfo MetallicRoughnessTexture;
             }
-        }
-
-        static void TestGenerics<T>(ref T value)
-        {
-            System.Console.WriteLine(value);
         }
     }
 } // namespace bgl
