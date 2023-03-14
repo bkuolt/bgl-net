@@ -13,11 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using OpenTK.Wpf;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Graphics.GL;
-using OpenTK.Graphics;
-
 
 using System.Text.Json;
 using bgl;
@@ -295,29 +290,6 @@ namespace wpf_demo
         // -------------------------------------------------------------
 
 
-        public class Viewport : OpenTK.Wpf.GLWpfControl
-        {
-
-            public Viewport()
-            {
-                var settings = new GLWpfControlSettings
-                {
-                    MajorVersion = 4,
-                    MinorVersion = 0
-                };
-
-                this.Render += OnRender;
-                this.Width = 300;
-                this.Height = 300;
-                this.Start(settings);
-            }
-
-            protected void OnRender(TimeSpan delta)
-            {
-                GL.ClearColor(1, 0, 0, 1);
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            }
-        }
 
 
         /// ///////////////////////////////////
