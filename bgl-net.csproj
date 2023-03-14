@@ -5,6 +5,12 @@
     <RootNamespace>wpf_demo</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+
+
+    <IsPackable>false</IsPackable>
+    <GenerateProgramFile>false</GenerateProgramFile>  
+    <!-- https://andrewlock.net/fixing-the-error-program-has-more-than-one-entry-point-defined-for-console-apps-containing-xunit-tests/ -->
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +24,11 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="StbSharp" Version="0.7.2.38" />
+
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
+ 
   </ItemGroup>
   <ItemGroup>
     <None Update="Shaders\shader.frag">
