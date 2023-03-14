@@ -13,7 +13,7 @@ namespace wpf_demo
     /// </summary>
     public partial class App : Application
     {
-        App() {
+        public App() {
          //   this.IsActive = true 
         }
     
@@ -21,6 +21,18 @@ namespace wpf_demo
         {
          Console.WriteLine("sd");
          //   MessageBox.Show("changed!");
+        }
+    }
+
+
+    public static class Program
+    {
+        [STAThread]
+        static public void Main()
+        {
+            App application = new App();
+            application.InitializeComponent();
+            application.Run();
         }
     }
 
