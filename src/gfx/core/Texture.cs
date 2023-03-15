@@ -5,7 +5,7 @@ using System.Drawing;
 using OpenGL = OpenTK.Graphics.OpenGL;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-namespace bgl
+namespace bgl.Graphics.Core
 {
     public class Texture
     {

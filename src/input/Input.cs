@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace bgl.Input
 {
-    class Arcball
+    public partial class Arcball
     {
         /// <summary>
         /// The current radius, which is the distance to center of the sphere
@@ -11,7 +11,8 @@ namespace bgl.Input
         public float Radius
         {
             get { return _radius; }
-            set {
+            set
+            {
                 _radius = System.MathF.Max(value, System.Single.Epsilon);  // make sure that the radius is not negative
                 _radius = System.MathF.Min(MaxRadius, _radius);
             }
@@ -25,9 +26,9 @@ namespace bgl.Input
         public float ZoomSpeed
         {
             get { return _zoomSpeed; }
-            set { _zoomSpeed =  System.MathF.Max(value, System.Single.Epsilon); }
+            set { _zoomSpeed = System.MathF.Max(value, System.Single.Epsilon); }
         }
-        
+
         public float MinRadius
         {
             get { return _minRadius; }
@@ -40,68 +41,32 @@ namespace bgl.Input
             set { _maxRadius = System.MathF.Max(value, 0); }  // make sure it's not negative
         }
 
-        public Arcball(in UIElement element)
+        public Arcball(in UIElement element, in Camera camera)
         {
-            if (element != null) {
+            if (element != null)
+            {
                 element.MouseMove += OnMouseMotion;
                 element.MouseWheel += OnMouseWheel;
                 _element = element;
             }
-
         }
 
         ~Arcball()
         {
-            if (_element != null) {
+            if (_element != null)
+            {
                 _element.MouseMove -= OnMouseMotion;
                 _element.MouseWheel -= OnMouseWheel;
             }
         }
+        private partial void OnMouseWheel(object sender, RoutedEventArgs e);
 
-        private void OnMouseWheel(object sender, RoutedEventArgs e)
-        {
-            var mouseWheelEvent = e as System.Windows.Input.MouseWheelEventArgs;
-            if (mouseWheelEvent == null)
-            {
-                return;
-            }
+        private partial void OnMouseMotion(object sender, RoutedEventArgs e);
 
-            Radius += mouseWheelEvent.Delta * ZoomSpeed;
-            Radius = System.MathF.Max(Radius, MinRadius);
-            Radius = System.MathF.Min(Radius, MaxRadius);
-        }
+        public partial Vector3 GetPosition();
+        public partial Vector3 GetUpVector();
+        public partial Matrix4 GetViewMatrix();
 
-        private void OnMouseMotion(object sender, RoutedEventArgs e)
-        {
-            var mouseEvent = e as System.Windows.Input.MouseEventArgs;
-            if (mouseEvent == null)
-            {
-                return;
-            }
-
-            if (mouseEvent.XButton1 == System.Windows.Input.MouseButtonState.Pressed)
-            {
-                var delta = _lastMousePostion != null ? _lastMousePostion - mouseEvent.GetPosition(null) : new Vector();
-                _lastMousePostion = mouseEvent.GetPosition(null);
-                Angles[0] += (float)delta.Value.X;
-                Angles[1] += (float)delta.Value.Y;
-            }
-        }
-
-        public Vector3 GetPosition()
-        {
-            return new Vector3();  // TODO
-        }
-
-        public Vector3 GetUpVector()
-        {
-            return new Vector3();  // TODO
-        }
-
-        public Matrix4 GetViewMatrix()
-        {
-            return Matrix4.LookAt(GetPosition(), new Vector3(0, 0, 0), GetUpVector());
-        }
         readonly UIElement? _element;
         private Point? _lastMousePostion;
 

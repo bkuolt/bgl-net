@@ -1,7 +1,7 @@
 using OpenTK.Graphics.OpenGL;
 using OpenGL = OpenTK.Graphics.OpenGL;
 
-namespace bgl
+namespace bgl.Graphics.Core
 {
     using Matrix4D = OpenTK.Mathematics.Matrix4;
 

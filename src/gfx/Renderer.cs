@@ -10,7 +10,7 @@ namespace bgl
 {
     public class Renderer
     {
-        private static bgl.ShaderProgram program;
+        private static bgl.Graphics.Core.ShaderProgram program;
 
         public static void Draw()
         {

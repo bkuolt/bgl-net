@@ -3,7 +3,7 @@ using System;
 using OpenTK.Graphics.OpenGL;
 using OpenGL = OpenTK.Graphics.OpenGL;
 
-namespace bgl
+namespace bgl.Graphics.Core
 {
     class Shader
     {

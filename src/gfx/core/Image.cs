@@ -5,7 +5,7 @@ using OpenGL = OpenTK.Graphics.OpenGL;
 
 using FreeImageAPI;
 
-namespace bgl
+namespace bgl.Graphics.Core
 {
     public class Image
     {

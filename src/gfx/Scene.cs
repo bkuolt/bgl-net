@@ -11,7 +11,7 @@ namespace bgl
             public Node[] Children;
             public Matrix4D Transform;
 
-            public Mesh[] Meshes;
+            public bgl.Graphics.Core.Mesh[] Meshes;
             public Camera Camera;
 
             public Node(in Node parent)
@@ -21,7 +21,7 @@ namespace bgl
 
             public void Draw(in Matrix4D viewMatrix)
             {
-                foreach (Mesh mesh in Meshes)
+                foreach (bgl.Graphics.Core.Mesh mesh in Meshes)
                 {
                     var worldMatrix = Parent.GetWorldTransform() * Transform;
                     mesh.Draw(worldMatrix, viewMatrix);
@@ -46,7 +46,7 @@ namespace bgl
             foreach (Node node in GetAllNodes())
             {
                 viewMatrix = viewMatrix * node.Parent.Transform;
-                foreach (Mesh mesh in node.Meshes)
+                foreach (bgl.Graphics.Core.Mesh mesh in node.Meshes)
                 {
                     mesh.Draw(worldMatrix, viewMatrix);
                 }
