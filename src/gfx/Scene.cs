@@ -4,10 +4,6 @@ namespace bgl
 
     public class Scene
     {
-        public record Camera
-        {
-            public Matrix4D ViewMatrix;
-        }
 
         public class Node
         {

@@ -279,7 +279,7 @@ namespace wpf_demo
 
             // --------------------------------- //
 
-            var viewport = new Viewport();
+            var viewport = new bgl.WPF.Viewport();
 
             var grid = (Grid)this.FindName("Grid");
             grid.Children.Add(viewport);
