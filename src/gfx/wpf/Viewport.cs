@@ -31,7 +31,7 @@ namespace bgl.WPF
             this.Render += OnRender;
             this.MouseDown += OnMouseDown;
 
-            this.AddHandler(MouseDownEvent, new RoutedEventHandler(OnMouseDown));
+           // this.AddHandler(MouseDownEvent, new RoutedEventHandler(OnMouseDown));
         }
 
         /* ----------------------------------- Rendering ----------------------------------  */
@@ -188,8 +188,8 @@ namespace bgl.WPF
             var mouseEvent = e as System.Windows.Input.MouseButtonEventArgs;
             if (mouseEvent == null) return;
 
-            var position = mouseEvent.GetPosition(null);
-            MessageBox.Show(position.X.ToString());
+            var position = mouseEvent.GetPosition(this);
+            MessageBox.Show(position.X.ToString() + "," + position.Y.ToString());
         }
 
 
@@ -236,13 +236,32 @@ namespace bgl.WPF
         {
             System.Console.WriteLine("Created index buffer");
 
+            /*
+                5-------- 6
+               / 
+             /    
+            1 ------- 2
+            |         |
+            |   4     |  7
+            |  /      | /
+            0 --------3   
+             */
+
             uint[] indices = new uint[] {
                 // front side
                 0, 1, 2,
                 0, 2, 3,
                 // backside
                 4, 5, 6,
-                4, 6, 7
+                4, 6, 7,
+                
+                // left side 
+                5,4,0,
+                0,1,5,
+
+                // right side 
+                3,2,6,
+                6,7,3
             };
             int size = sizeof(uint) * indices.Length;
 

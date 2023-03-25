@@ -6,22 +6,22 @@
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:local="clr-namespace:wpf_demo"
         mc:Ignorable="d"
-        Name="Fenster"
-        Title="BGL WPF Tech Demo"
-        Height="512"
-        Width="512">
-    <Grid ShowGridLines="True"
-          Name="Grid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.25*" />
-            <ColumnDefinition Width="0.75*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1.0*" />
-        </Grid.RowDefinitions>
-        <DockPanel Grid.Column="0"
-                   Grid.Row="0">
-            <Menu DockPanel.Dock="Top">
+		Name ="Fenster"
+        Title="BGL WPF Tech Demo" Height="512" Width="512">
+
+    <Grid ShowGridLines="True" Name="Grid"> 
+        <Grid.ColumnDefinitions>    
+            <ColumnDefinition Width="0.25*"></ColumnDefinition>    
+            <ColumnDefinition Width="0.75*"></ColumnDefinition>    
+        </Grid.ColumnDefinitions>    
+        <Grid.RowDefinitions>    
+            <RowDefinition Height="0.5*"></RowDefinition>    
+
+        </Grid.RowDefinitions> 
+
+        <!-- ========================== Menu ========================== -->
+        <StackPanel Grid.Column="0" Grid.Row="0">
+            <Menu>
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" />
                     <MenuItem Header="_Open" />
@@ -30,13 +30,10 @@
                     <MenuItem Header="_Exit" />
                 </MenuItem>
             </Menu>
-            <TextBox AcceptsReturn="True" />
-        </DockPanel>
-        <TreeView Name="treeView"
-                  Grid.Column="0"
-                  Grid.Row="1" />
-        <glWpfControl:GLWpfControl Grid.Column="1"
-                                   Grid.Row="0"
-                                   x:Name="OpenTkControl" />
-    </Grid>
+        </StackPanel>
+   
+        <!-- ====================== GL Viewport ========================== --> 
+        <glWpfControl:GLWpfControl Grid.Column="1" Grid.Row="0" x:Name="OpenTkControl"/>
+  </Grid>
+  
 </Window>
