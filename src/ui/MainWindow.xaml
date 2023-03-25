@@ -6,28 +6,23 @@
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:local="clr-namespace:wpf_demo"
         mc:Ignorable="d"
-		Name ="Fenster"
-        Title="MainWindow" Height="1280" Width="720">
-
-
-    <Grid ShowGridLines="True" Name="Grid"> 
-        <Grid.ColumnDefinitions>    
-            <ColumnDefinition Width="0.25*"></ColumnDefinition>    
-            <ColumnDefinition Width="0.25*"></ColumnDefinition>  
-            <ColumnDefinition Width="0.25*"></ColumnDefinition>    
-        </Grid.ColumnDefinitions>    
-        <Grid.RowDefinitions>    
-            <RowDefinition Height="0.2*"></RowDefinition>    
-            <RowDefinition Height="300"></RowDefinition>    
-        </Grid.RowDefinitions>    
-
-
-            
-  <glWpfControl:GLWpfControl Grid.Column="2" Grid.Row="0"
-            x:Name="OpenTkControl"/>
-
-    <DockPanel Grid.Column="0" Grid.Row="0">
-        <Menu DockPanel.Dock="Top">
+        Name="Fenster"
+        Title="MainWindow"
+        Height="1280"
+        Width="720">
+    <Grid ShowGridLines="True"
+          Name="Grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.25*" />
+            <ColumnDefinition Width="0.75*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="300" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Column="0"
+                   Grid.Row="0">
+            <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" />
                     <MenuItem Header="_Open" />
@@ -35,30 +30,14 @@
                     <Separator />
                     <MenuItem Header="_Exit" />
                 </MenuItem>
-        </Menu>
-        <TextBox AcceptsReturn="True" />
-    </DockPanel>
-    
-    <TreeView Name="treeView" Grid.Column="0" Grid.Row="1">
-		</TreeView>
-    
-    <Frame Name="imageView" Source="ImageFrame.xaml" 
-           Grid.Column="1" Grid.Row="0" />
-
-    
-<Border Background="LightBlue" 
-        BorderBrush="Black" 
-        BorderThickness="2" 
-        CornerRadius="45" 
-        Padding="25">
-    <Viewbox Grid.Column="1" Grid.Row="0" Name = "myViewBox3D">
-        <Canvas Width="300" Height="300">
-          <Frame Source="3DFrame.xaml"/>
-        </Canvas>
-
-    </Viewbox>
-</Border>
-
-  </Grid>
-  
+            </Menu>
+            <TextBox AcceptsReturn="True" />
+        </DockPanel>
+        <TreeView Name="treeView"
+                  Grid.Column="0"
+                  Grid.Row="1" />
+        <glWpfControl:GLWpfControl Grid.Column="1"
+                                   Grid.Row="0"
+                                   x:Name="OpenTkControl" />
+    </Grid>
 </Window>
