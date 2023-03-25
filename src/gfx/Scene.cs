@@ -4,15 +4,15 @@ namespace bgl
 
     public class Scene
     {
-
+#if false
         public class Node
         {
-            public readonly Node Parent;
-            public Node[] Children;
-            public Matrix4D Transform;
+            public readonly Node? Parent;
+            public Node[]? Children;
+            public Matrix4D? Transform;
 
-            public bgl.Graphics.Core.Mesh[] Meshes;
-            public Camera Camera;
+            public bgl.Graphics.Core.Mesh[]? Meshes;
+            public Camera? Camera;
 
             public Node(in Node parent)
             {
@@ -65,5 +65,7 @@ namespace bgl
 
         private Node[] cameras;
         private uint currentCamera;
+#endif 
     }
+
 }

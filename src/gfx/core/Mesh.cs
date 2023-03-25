@@ -40,6 +40,8 @@ namespace bgl.Graphics.Core
 
         public void Draw(Matrix4D w, Matrix4D s)
         {
+#if false
+
             vertexArray.Bind();
             GL.DrawElements(
                 primitiveType,
@@ -47,13 +49,14 @@ namespace bgl.Graphics.Core
                 OpenGL.DrawElementsType.UnsignedInt,
                 indexAcessor.BufferView.Offset
             );
+#endif
         }
 
-        private Accessor indexAcessor;
-        private Accessor[] vertexAcessors;
+        private Accessor? indexAcessor;
+        private Accessor[]? vertexAcessors;
 
-        private VertexArray vertexArray;
-        private OpenGL.PrimitiveType primitiveType;
+        private VertexArray? vertexArray;
+        private OpenGL.PrimitiveType? primitiveType;
         private Material? material;
     };
 }

@@ -20,8 +20,8 @@ namespace wpf_demo
             public readonly int ByteStride;
             public readonly int Count;
 
-            string componentType;
-            string accessorType;
+            string? componentType;
+            string? accessorType;
             int count;
 
             int GetSize(string accesorType, string type)
@@ -49,7 +49,7 @@ namespace wpf_demo
 
             }
 
-            BufferView bufferView;
+            BufferView? bufferView;
         };
 
 
@@ -105,7 +105,7 @@ namespace wpf_demo
 
         record Mesh
         {
-            BufferView position;
+            BufferView? position;
             BufferView? normal;
             BufferView? textureCoordinates;
             // TODO
@@ -113,9 +113,9 @@ namespace wpf_demo
 
         public class GeometryLoader
         {
-            private Point3DCollection _positions;
-            private Vector3DCollection _normals;
-            private Int32Collection _indices;
+            private Point3DCollection? _positions;
+            private Vector3DCollection? _normals;
+            private Int32Collection? _indices;
 
             public MeshGeometry3D GetGeometry()
             {

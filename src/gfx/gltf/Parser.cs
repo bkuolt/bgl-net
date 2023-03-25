@@ -13,7 +13,7 @@ namespace BGL.GLTF
             _document = document.RootElement;
         }
 
-        public GLTF.Model Parse()
+        public GLTF.Model? Parse()
         {
             JsonSerializerOptions options = new JsonSerializerOptions();
             options.PropertyNameCaseInsensitive = true;
@@ -21,16 +21,17 @@ namespace BGL.GLTF
             return JsonSerializer.Deserialize<GLTF.Model>(_document, options);
         }
 
-        private byte[] LoadBuffer(in Model.Buffer buffer) {
+        private byte[]? LoadBuffer(in Model.Buffer buffer) {
             return null;
         }
-        private byte[] LoadImage(in Model.Image image) {
+        private byte[]? LoadImage(in Model.Image image) {
             return null;
         }
 
 #if DEBUG
         public static void Test()
         {
+        #if false
             try
             {
                 Parser parser = new Parser("model.gltf");
@@ -41,6 +42,7 @@ namespace BGL.GLTF
             {
                 System.Console.WriteLine(exception.Message);
             }
+         #endif
         }
 #endif
         private readonly JsonElement _document;

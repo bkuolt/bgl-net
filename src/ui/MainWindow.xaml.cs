@@ -23,7 +23,7 @@ namespace wpf_demo
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        public static TreeViewItem gltfTreeView;
+        public static TreeViewItem? gltfTreeView;
 
         public void ChooseFile(object sender, EventArgs e)
         {
@@ -59,7 +59,7 @@ namespace wpf_demo
             {
                 return document.GetProperty(name);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // nothing to do yet
                 return new System.Text.Json.JsonElement();
@@ -238,19 +238,19 @@ namespace wpf_demo
                 return;
             }
         }
-        public static T FindVisualChildByName<T>(DependencyObject parent, string name) where T : DependencyObject
+        public static T? FindVisualChildByName<T>(DependencyObject parent, string name) where T : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
                 var child = VisualTreeHelper.GetChild(parent, i);
-                string controlName = child.GetValue(Control.NameProperty) as string;
+                string controlName = ""; //child.GetValue(Control.NameProperty) as string;
                 if (controlName == name)
                 {
                     return child as T;
                 }
                 else
                 {
-                    T result = FindVisualChildByName<T>(child, name);
+                    T? result = FindVisualChildByName<T>(child, name);
                     if (result != null)
                         return result;
                 }
@@ -266,10 +266,10 @@ namespace wpf_demo
             const string uri = "https://e7.pngegg.com/pngimages/820/630/png-clipart-cat-kitten-cartoon-cat-cats-illustration-cartoon-character-painted-thumbnail.png";
             UpdateImageView(this.FindName("image"), uri);
 
-            ChooseFile(null, null);
-            TreeViewItem model = gltfTreeView;
+            //ChooseFile(null, null);
+            //TreeViewItem model = gltfTreeView;
 
-            tree.Items.Add(model);
+            //tree.Items.Add(model);
             var window = (System.Windows.Window)this.FindName("Fenster");
             window.Width = 1000;
 
@@ -311,7 +311,7 @@ namespace wpf_demo
                 var treeView2 = (Button)sender;
                 Console.Write("treeview2: " + (treeView2 != null));
             }
-            catch (Exception eee)
+            catch (Exception)
             {
                 //MessageBox.Show("Failed");
                 return;

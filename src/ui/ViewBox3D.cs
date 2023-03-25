@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using System.Text.Json;
 using bgl;
 
-using System;
+
 using System.Threading;
 
 namespace wpf_demo
@@ -50,7 +50,7 @@ namespace wpf_demo
         {
             return;
 
-            position += 0.0001;
+           // position += 0.0001;
 
             //MessageBox.Show("sdsdsd");
         }
@@ -85,7 +85,7 @@ namespace wpf_demo
         {
             //  DispatcherTimer setup
             dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+          //  dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 20);
             dispatcherTimer.Start();
         }

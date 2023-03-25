@@ -67,21 +67,23 @@ namespace bgl.Graphics.Core
     }
 
     public interface ImageLoader
-    {
+    {/* 
         public Image Load(in string path)
         {
             string extension = System.IO.Path.GetExtension(path);
             return loaders[extension].Load(path);
         }
-
+*/
         public static void Add(in string extension, in ImageLoader loader)
         {
+#if false
             if (loader == null)
             {
                 throw new System.Exception("invalid loader 'null'");
             }
             string trimmedExtension = extension.Trim();
             loaders.Add(trimmedExtension, loader);
+#endif
         }
 
         public static void Remove(in ImageLoader loader)
@@ -89,7 +91,7 @@ namespace bgl.Graphics.Core
             // TODO
         }
 
-        private static Dictionary<string, ImageLoader> loaders;
+        private static Dictionary<string, ImageLoader>? loaders;
     }
 
     // TODO: tests

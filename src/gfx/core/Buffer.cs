@@ -6,7 +6,7 @@ namespace bgl.Graphics.Core
     public record BufferView
     {
         public OpenGL.BufferTarget Target;
-        public Buffer Buffer;
+        public Buffer? Buffer;
         public int Offset;
         public uint Length;
     }
@@ -16,7 +16,7 @@ namespace bgl.Graphics.Core
         OpenGL.TypeEnum type;
         OpenGL.TypeEnum componentType;
         public uint Count;
-        public BufferView BufferView;
+        public BufferView? BufferView;
         int byteOffset;
     }
 
