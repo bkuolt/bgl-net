@@ -26,6 +26,7 @@ namespace bgl.WPF
             // this.Width = width;
             // this.Height = height;
             this.Start(settings);
+            Initialize();
 
             this.Render += OnRender;
             this.MouseDown += OnMouseDown;
@@ -43,7 +44,6 @@ namespace bgl.WPF
             public int LightDirection;
         };
 
-        private bool _initialized = false;
         private int _program;
         private UniformLocations _uniformLocations = new UniformLocations();
 
@@ -59,68 +59,69 @@ namespace bgl.WPF
         private static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
 
 
-        protected void OnRender(System.TimeSpan delta)
+        private void Initialize()
         {
-            // TODO: count frames per second
-            GL.ClearColor(211 / 256.0f, 211  / 256.0f, 211  / 256.0f, 1.0f);
-
-
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-
-            if (!_initialized)
+            try
             {
-                /* ---------------------------- Shader creation ----------------------- */
+                /* ---------------------------- Shader Creation ----------------------- */
                 CreateShaderProgram();
                 _uniformLocations.ModelMatrix = GL.GetUniformLocation(_program, "ModelMatrix");
                 _uniformLocations.ViewMatrix = GL.GetUniformLocation(_program, "ViewMatrix");
                 _uniformLocations.ProjectionMatrix = GL.GetUniformLocation(_program, "ProjectionMatrix");
                 _uniformLocations.LightDirection = GL.GetUniformLocation(_program, "LightDirection");
-                /* ---------------------------- buffer creation ----------------------- */
+
+                /* ---------------------------- Buffer Creation ----------------------- */
                 CreateVertexBuffer();
                 CreateIndexBuffer();
                 CreateVertexArray();
-                _initialized = true;
-            }
 
-            /* --------------------------- Update Uniforms ----------------------- */
+                _stopwatch.Start();
+            }
+            catch (System.Exception exception)
+            {
+                System.Windows.MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        void UpdateUniforms()
+        {
+            // ----------------- View Matrix --------------
             Math.Vector3 lightDirection = new Math.Vector3(1, 1, 1);
             Math.Matrix4 viewMatrix = Math.Matrix4.LookAt(new Vector3(0, 1, -10),
                                                            new Vector3(0, 0, 0),
                                                            new Vector3(0, 1, 0));
+            // ----------------- Model Matrix --------------
             Math.Matrix4 modelMatrix;
 
-            if (!_stopwatch.IsRunning)
-            {
-                _stopwatch.Start();
-            }
-
             double radiansPerSecond = ConvertToRadians(60.0);
-            double elapsed = _stopwatch.Elapsed.TotalSeconds;
-            System.Console.WriteLine("Elapsed: " + elapsed);
-            _angle = (float)(elapsed * radiansPerSecond);
-
+            _angle = (float)(_stopwatch.Elapsed.TotalSeconds * radiansPerSecond);
             Math.Matrix4.CreateRotationY(_angle, out modelMatrix);  // Math.Matrix4.CreateScale(3);
 
-
-
+            // ----------------- Projection Matrix --------------
             Math.Matrix4 projectionMatrix = Math.Matrix4.CreatePerspectiveFieldOfView(0.5f, 1.0f, 0.1f, 100);
-            // Math.Matrix4.CreateOrthographic(3, 3, -10, 10);//  
 
-            GL.UseProgram(_program);
+            // ----------------- OpenGL Uniform Upload --------------
             GL.UniformMatrix4(_uniformLocations.ViewMatrix, false, ref viewMatrix);
             GL.UniformMatrix4(_uniformLocations.ProjectionMatrix, false, ref projectionMatrix);
             GL.UniformMatrix4(_uniformLocations.ModelMatrix, false, ref modelMatrix);
             GL.Uniform3(_uniformLocations.LightDirection, ref lightDirection);
+        }
 
-            // TODO: create ibo
+        protected void OnRender(System.TimeSpan delta)
+        {
+            GL.UseProgram(_program);
+            UpdateUniforms();
 
-            /* --------------------------- Draw ----------------------------------- */
-            GL.Disable(OpenGL.EnableCap.CullFace);
+            // TODO: count frames per second
+            GL.ClearColor(211 / 256.0f, 211 / 256.0f, 211 / 256.0f, 1.0f);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.BindBuffer(OpenGL.BufferTarget.ElementArrayBuffer, _ibo);
+
             GL.BindBuffer(OpenGL.BufferTarget.ArrayBuffer, _vbo);
+            GL.BindBuffer(OpenGL.BufferTarget.ElementArrayBuffer, _ibo);
             GL.BindVertexArray(_vao);
+
+            GL.Disable(OpenGL.EnableCap.CullFace);
 
             GL.DrawElements(OpenGL.PrimitiveType.Triangles, (3 * 2) * 2, OpenGL.DrawElementsType.UnsignedInt, 0);
         }
@@ -166,7 +167,6 @@ namespace bgl.WPF
 
             System.Console.WriteLine("VS: " + vsLog);
             System.Console.WriteLine("FS: " + fsLog);
-
 
             GL.Disable(OpenGL.EnableCap.CullFace);
 
@@ -261,7 +261,6 @@ namespace bgl.WPF
 
         private bgl.Input.Arcball? _arcball;
         private Scene? _scene;
-
     }
     // DataModel
 
