@@ -49,10 +49,22 @@ namespace bgl.WPF
 
         float _angle = 0;
 
+
+        // --------------------------------------------------------------------------------------------------
+        private double ConvertToRadians(double angle)
+        {
+            return (System.Math.PI / 180) * angle;
+        }
+
+        private static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+
+
         protected void OnRender(System.TimeSpan delta)
         {
             // TODO: count frames per second
-            GL.ClearColor(1, 0, 0, 1);
+            GL.ClearColor(211 / 256.0f, 211  / 256.0f, 211  / 256.0f, 1.0f);
+
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 
@@ -73,11 +85,24 @@ namespace bgl.WPF
 
             /* --------------------------- Update Uniforms ----------------------- */
             Math.Vector3 lightDirection = new Math.Vector3(1, 1, 1);
-            Math.Matrix4 viewMatrix = Math.Matrix4.LookAt(new Vector3(0, 1, -50),
+            Math.Matrix4 viewMatrix = Math.Matrix4.LookAt(new Vector3(0, 1, -10),
                                                            new Vector3(0, 0, 0),
                                                            new Vector3(0, 1, 0));
             Math.Matrix4 modelMatrix;
-            Math.Matrix4.CreateRotationY(_angle += 0.01f, out modelMatrix);  // Math.Matrix4.CreateScale(3);
+
+            if (!_stopwatch.IsRunning)
+            {
+                _stopwatch.Start();
+            }
+
+            double radiansPerSecond = ConvertToRadians(60.0);
+            double elapsed = _stopwatch.Elapsed.TotalSeconds;
+            System.Console.WriteLine("Elapsed: " + elapsed);
+            _angle = (float)(elapsed * radiansPerSecond);
+
+            Math.Matrix4.CreateRotationY(_angle, out modelMatrix);  // Math.Matrix4.CreateScale(3);
+
+
 
             Math.Matrix4 projectionMatrix = Math.Matrix4.CreatePerspectiveFieldOfView(0.5f, 1.0f, 0.1f, 100);
             // Math.Matrix4.CreateOrthographic(3, 3, -10, 10);//  
@@ -97,7 +122,7 @@ namespace bgl.WPF
             GL.BindBuffer(OpenGL.BufferTarget.ArrayBuffer, _vbo);
             GL.BindVertexArray(_vao);
 
-            GL.DrawElements(OpenGL.PrimitiveType.TriangleStrip, 4, OpenGL.DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(OpenGL.PrimitiveType.Triangles, (3 * 2) * 2, OpenGL.DrawElementsType.UnsignedInt, 0);
         }
 
         private void CreateShaderProgram()
@@ -113,12 +138,12 @@ namespace bgl.WPF
                 uniform mat4 ProjectionMatrix;
                 uniform vec3 LightDirection;
 
-                in vec2 Vertex;
+                in vec3 Vertex;
 
                 void main() {
                   //  vec4 position = vec4(vertices[gl_VertexID], 1.0);
                     mat4 modelViewProjection = ProjectionMatrix * ViewMatrix * ModelMatrix;
-                    gl_Position = modelViewProjection * vec4(Vertex, 0, 1);  //modelViewProjection * position;
+                    gl_Position = modelViewProjection * vec4(Vertex, 1);  //modelViewProjection * position;
                 }
             """;
 
@@ -171,11 +196,16 @@ namespace bgl.WPF
         void CreateVertexBuffer()
         {
             float[] vertices = new float[] {
-                -1, -1,
-                -1,  1,
-                 1,  -1,
-                 1, 1
+                -1, -1, -1,
+                -1,  1, -1,
+                 1,  1, -1,
+                 1, -1, -1,
+                -1, -1, 1,
+                -1,  1, 1,
+                 1,  1, 1,
+                 1, -1, 1,
             };
+
             int size = sizeof(float) * vertices.Length;
 
             int[] buffer = new int[1];
@@ -196,7 +226,7 @@ namespace bgl.WPF
             GL.BindVertexArray(array[0]);
             GL.EnableVertexArrayAttrib(array[0], 0);
             GL.VertexAttribPointer(0,
-                                   2, VertexAttribPointerType.Float, false,
+                                   3, VertexAttribPointerType.Float, false,
                                    0, 0);
 
             _vao = array[0];
@@ -206,7 +236,14 @@ namespace bgl.WPF
         {
             System.Console.WriteLine("Created index buffer");
 
-            uint[] indices = new uint[] { 0, 1, 2, 3 };
+            uint[] indices = new uint[] {
+                // front side
+                0, 1, 2,
+                0, 2, 3,
+                // backside
+                4, 5, 6,
+                4, 6, 7
+            };
             int size = sizeof(uint) * indices.Length;
 
             int[] buffer = new int[1];
