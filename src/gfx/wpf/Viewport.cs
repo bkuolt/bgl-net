@@ -18,18 +18,13 @@ namespace bgl.WPF
         public Viewport()
         {
             var settings = new GLWpfControlSettings { MajorVersion = 3, MinorVersion = 3 };
-
-            // this.Width = width;
-            // this.Height = height;
             this.Start(settings);
 
             _renderer = new bgl.Renderer();
-
-
+            // _arcball = new bgl.Input.Arcball(this);
+            
             this.Render += OnRender;
             this.MouseDown += OnMouseDown;
-
-            // this.AddHandler(MouseDownEvent, new RoutedEventHandler(OnMouseDown));
         }
 
 
