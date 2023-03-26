@@ -15,6 +15,7 @@ Minimalistic GLTF2 model viewer for __.NET__.
     dotnet add package OpenTK --version 4.7.7
     dotnet add package FreeImage-dotnet-core --version 4.3.6
     ```
+    dotnet add package SixLabors.ImageSharp --version 3.0.0
 2) Clone repository
     ```PowerShell
     git clone https://github.com/bkuolt/bgl-net.git
