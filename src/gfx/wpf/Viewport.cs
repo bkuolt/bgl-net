@@ -3,96 +3,11 @@ using OpenTK.Graphics.OpenGL;
 using System.Windows;
 using OpenTK.Mathematics;
 
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-
 namespace bgl.WPF
 {
     using OpenGL = OpenTK.Graphics.OpenGL;
     using Math = OpenTK.Mathematics;
-    using ImageSharp = SixLabors.ImageSharp;
 
-    public class Texture
-    {
-        byte[] _pixels = new byte[0];
-        int _width;
-        int _height;
-        int _texture;
-
-        public Texture(string path)
-        {
-            _texture = GL.GenTexture();
-            LoadImage(path);
-            Upload();
-        }
-
-        public void Bind()
-        {
-            GL.BindTexture(TextureTarget.Texture2D, _texture);
-        }
-
-        public void Bind(uint textureUnit)
-        {
-            Bind();
-            GL.ActiveTexture(OpenGL.TextureUnit.Texture0 + (int)textureUnit);
-        }
-
-        private void LoadImage(string path)
-        {
-            //Load the image
-            var image = ImageSharp.Image.Load<Rgba32>(path);
-            image.Mutate(x => x.Flip(FlipMode.Vertical));
-
-            _pixels = new byte[4 * image.Width * image.Height];
-            image.CopyPixelDataTo(_pixels);
-            _width = image.Width;
-            _height = image.Height;
-
-            System.Console.WriteLine("Loaded image " + path);
-        }
-
-        private void Upload()
-        {
-            Bind();
-            float[] borderColor = { 1.0f, 1.0f, 0.0f, 1.0f };
-            GL.TexParameter(
-                TextureTarget.Texture2D,
-                TextureParameterName.TextureBorderColor,
-                borderColor
-            );
-            GL.TexParameter(
-                TextureTarget.Texture2D,
-                TextureParameterName.TextureWrapS,
-                (int)TextureWrapMode.Repeat
-            );
-            GL.TexParameter(
-                TextureTarget.Texture2D,
-                TextureParameterName.TextureWrapT,
-                (int)TextureWrapMode.Repeat
-            );
-            GL.TexParameter(
-                TextureTarget.Texture2D,
-                TextureParameterName.TextureMinFilter,
-                (int)TextureMinFilter.Linear
-            );
-            GL.TexParameter(
-                TextureTarget.Texture2D,
-                TextureParameterName.TextureMagFilter,
-                (int)TextureMagFilter.Linear
-            );
-            GL.TexImage2D(
-                TextureTarget.Texture2D,
-                0,
-                PixelInternalFormat.Rgba,
-                _width,
-                _height,
-                0,
-                PixelFormat.Rgba,
-                PixelType.UnsignedByte,
-                _pixels
-            );
-        }
-    }
 
     class IViewport
     {
@@ -170,7 +85,7 @@ namespace bgl.WPF
                 CreateIndexBuffer();
                 CreateVertexArray();
 
-                _texture = new Texture("tests/glTF/Default_metalRoughness.jpg");
+                _texture = new bgl.Graphics.Core.Texture("tests/glTF/Default_metalRoughness.jpg");
 
                 _stopwatch.Start();
             }
@@ -454,7 +369,7 @@ namespace bgl.WPF
         private int _ibo;
         private int _vao;
 
-        private Texture _texture;
+        private bgl.Graphics.Core.Texture _texture;
 
         private bgl.Input.Arcball? _arcball;
         private Scene? _scene;

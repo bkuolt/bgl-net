@@ -1,57 +1,101 @@
 using OpenTK.Graphics.OpenGL;
-using System.Drawing.Imaging;
-using System.Drawing;
 
-using OpenGL = OpenTK.Graphics.OpenGL;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
+
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace bgl.Graphics.Core
 {
+    using ImageSharp = SixLabors.ImageSharp;
+    using OpenGL = OpenTK.Graphics.OpenGL;
+
     public class Texture
     {
         public const PixelInternalFormat internalFormat = PixelInternalFormat.Rgba32f;
 
-        public Texture(
-            in byte[] pixels,
-            in int width,
-            in int height,
-            in OpenGL.PixelFormat format,
-            in PixelType type
-        )
-        {
-            handle = GL.GenTexture();
-            GL.BindTexture(target, handle);
-            Upload(pixels, width, height, format, type);
-        }
-
         // TODO: set sampler
+        // TODO: destuctor
 
-        ~Texture()
+        public Texture(string path)
         {
-            GL.DeleteTexture(handle);
+            _texture = GL.GenTexture();
+            LoadImage(path);
+            Upload();
         }
-
-        public static implicit operator int(Texture texture) => texture.handle;
 
         public void Bind()
         {
-            GL.BindTexture(target, handle);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
         }
 
-        public void Upload(
-            in byte[] pixels,
-            in int width,
-            in int height,
-            in OpenGL.PixelFormat format,
-            in PixelType type
-        )
+        public void Bind(uint textureUnit)
         {
-            GL.TexImage2D(target, 0, internalFormat, width, height, 0, format, type, pixels);
-            // TODO: mip-maps
+            Bind();
+            GL.ActiveTexture(OpenGL.TextureUnit.Texture0 + (int)textureUnit);
         }
 
-        private int handle;
-        private TextureTarget target = TextureTarget.Texture2D;
+        private void LoadImage(string path)
+        {
+            //Load the image
+            var image = ImageSharp.Image.Load<Rgba32>(path);
+            image.Mutate(x => x.Flip(FlipMode.Vertical));
+
+            _pixels = new byte[4 * image.Width * image.Height];
+            image.CopyPixelDataTo(_pixels);
+            _width = image.Width;
+            _height = image.Height;
+
+            System.Console.WriteLine("Loaded image " + path);
+        }
+
+        private void Upload()
+        {
+            Bind();
+            float[] borderColor = { 1.0f, 1.0f, 0.0f, 1.0f };
+            GL.TexParameter(
+                TextureTarget.Texture2D,
+                TextureParameterName.TextureBorderColor,
+                borderColor
+            );
+            GL.TexParameter(
+                TextureTarget.Texture2D,
+                TextureParameterName.TextureWrapS,
+                (int)TextureWrapMode.Repeat
+            );
+            GL.TexParameter(
+                TextureTarget.Texture2D,
+                TextureParameterName.TextureWrapT,
+                (int)TextureWrapMode.Repeat
+            );
+            GL.TexParameter(
+                TextureTarget.Texture2D,
+                TextureParameterName.TextureMinFilter,
+                (int)TextureMinFilter.Linear
+            );
+            GL.TexParameter(
+                TextureTarget.Texture2D,
+                TextureParameterName.TextureMagFilter,
+                (int)TextureMagFilter.Linear
+            );
+            GL.TexImage2D(
+                TextureTarget.Texture2D,
+                0,
+                PixelInternalFormat.Rgba,
+                _width,
+                _height,
+                0,
+                OpenGL.PixelFormat.Rgba,
+                PixelType.UnsignedByte,
+                _pixels
+            );
+        }
+
+        byte[] _pixels = new byte[0];
+        int _width;
+        int _height;
+        int _texture;
+
     }
 
     class TextureLoader

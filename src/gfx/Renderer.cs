@@ -9,17 +9,7 @@ namespace bgl
 {
     public class Renderer
     {
-        private static bgl.Graphics.Core.ShaderProgram? program;
-
-        public static void Draw()
-        {
-            GL.ClearColor(1.0f, 0.3f, 0.3f, 1.0f);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            //Code goes here.
-
-            // crashes --> program = new bgl.ShaderProgram( new string[]{ "Shader/shader.vs" });
-        }
+   
 
     }
 
