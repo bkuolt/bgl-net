@@ -31,8 +31,13 @@ namespace bgl
             GL.Enable(OpenGL.EnableCap.DepthTest);
 
             _texture.Bind(1);
-var mesh = _scene.Meshes[0];
 
+            if (_scene.Meshes.Count <= 0)
+            {
+                return;  // there is no mesh to draw
+            }
+
+            var mesh = _scene.Meshes[0];
             GL.DrawElements(
                 OpenGL.PrimitiveType.Triangles,
                 mesh.GetIndices().Length,
@@ -223,10 +228,16 @@ var mesh = _scene.Meshes[0];
 
         void CreateVertexBuffer()
         {
+            if (_scene.Meshes.Count <= 0)
+            {
+                return;
+            }
+
             var mesh = _scene.Meshes[0];
 
             float[] vertices = new float[(mesh.VertexCount * 3) * 2];
-            for (int i = 0; i < mesh.VertexCount; ++i) {
+            for (int i = 0; i < mesh.VertexCount; ++i)
+            {
                 vertices[(i * 6) + 0] = mesh.Vertices[i].X;
                 vertices[(i * 6) + 1] = mesh.Vertices[i].Y;
                 vertices[(i * 6) + 2] = mesh.Vertices[i].Z;
@@ -270,16 +281,14 @@ var mesh = _scene.Meshes[0];
 
         void CreateIndexBuffer()
         {
-            System.Console.WriteLine("Created index buffer");
+            if (_scene.Meshes.Count <= 0)
+            {
+                return;
+            }
 
             var mesh = _scene.Meshes[0];
 
             int[] indices = mesh.GetIndices();
-      
-
-         
-
-    
             int size = sizeof(uint) * indices.Length;
 
             int[] buffer = new int[1];
@@ -318,8 +327,9 @@ var mesh = _scene.Meshes[0];
         float _angle = 0;
 
         Assimp.Scene _scene;
-        void LoadMesh() {
-          
+        void LoadMesh()
+        {
+
             const string fileName = "tests/glTF/DamagedHelmet.gltf";
 
             var importer = new Assimp.AssimpContext();
