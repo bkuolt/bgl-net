@@ -1,6 +1,7 @@
 namespace bgl
 {
     using Matrix4D = OpenTK.Mathematics.Matrix4;
+    using Vector2 = OpenTK.Mathematics.Vector2;
 
     public class Scene
     {
@@ -18,6 +19,9 @@ namespace bgl
             {
                 this.Parent = parent;
             }
+
+
+
 
             public void Draw(in Matrix4D viewMatrix)
             {
@@ -53,6 +57,7 @@ namespace bgl
             }
         }
 
+
         public void SetCamera(uint index)
         {
             // TODO
@@ -66,6 +71,10 @@ namespace bgl
         private Node[] cameras;
         private uint currentCamera;
 #endif 
+        public void Pick( OpenTK.Mathematics.Vector2 mouseCoordinates,  OpenTK.Mathematics.Vector2 windowBounds) {
+            // TODO
+        }
+
     }
 
 }
