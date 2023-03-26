@@ -28,12 +28,14 @@ namespace bgl
             GL.BindVertexArray(_vao);
 
             GL.Disable(OpenGL.EnableCap.CullFace);
+            GL.Enable(OpenGL.EnableCap.DepthTest);
 
             _texture.Bind(1);
+var mesh = _scene.Meshes[0];
 
             GL.DrawElements(
                 OpenGL.PrimitiveType.Triangles,
-                (3 * 2) * 2,
+                mesh.GetIndices().Length,
                 OpenGL.DrawElementsType.UnsignedInt,
                 0
             );
@@ -51,6 +53,8 @@ namespace bgl
         {
             try
             {
+                LoadMesh();
+
                 /* ---------------------------- Shader Creation ----------------------- */
                 CreateShaderProgram();
                 _uniformLocations.ModelMatrix = GL.GetUniformLocation(_program, "ModelMatrix");
@@ -136,15 +140,24 @@ namespace bgl
                 uniform mat4 ProjectionMatrix;
                 uniform vec3 LightDirection;
 
-                in vec3 Vertex;
+
+                layout (location = 0) in vec3 Vertex;
+                layout (location = 1) in vec3 inNormal;
 
                 out vec2 TexCoord;
+                out vec3 Normal;
+                out vec3 Color;
 
                 void main() {
                   //  vec4 position = vec4(vertices[gl_VertexID], 1.0);
                     mat4 modelViewProjection = ProjectionMatrix * ViewMatrix * ModelMatrix;
                     gl_Position = modelViewProjection * vec4(Vertex, 1);  //modelViewProjection * position;
-                    
+                   
+                    mat4 normalMatrix = inverse(ViewMatrix * ModelMatrix);
+                    Normal =  (normalMatrix * vec4(inNormal, 1)).xyz;
+
+
+                    Color = vec3(gl_VertexID % 256 / 256.0);
                     
                     switch (gl_VertexID % 4) {
                         case 0:
@@ -167,11 +180,17 @@ namespace bgl
                 #version 330 
 
                 uniform sampler2D Texture;
+
                 in vec2 TexCoord;
-
+                in vec3 Normal;
+                in vec3 Color;
+                
                 void main() {
+                    vec3 N = Normal;
+                    vec3 L = vec3(1);
+                    vec3 itensity = vec3( max(dot(N, L), 0));
 
-                    gl_FragColor = texture(Texture, TexCoord);
+                    gl_FragColor =  vec4(Color, 1.0);  //texture(Texture, TexCoord);
                 }
             """;
 
@@ -204,35 +223,20 @@ namespace bgl
 
         void CreateVertexBuffer()
         {
-            float[] vertices = new float[]
-            {
-                -1,
-                -1,
-                -1, // position
-                -1,
-                1,
-                -1, // position
-                1,
-                1,
-                -1, // position
-                1,
-                -1,
-                -1, // position
-                -1,
-                -1,
-                1, // position
-                -1,
-                1,
-                1, // position
-                1,
-                1,
-                1, // position
-                1,
-                -1,
-                1, // position
-            };
+            var mesh = _scene.Meshes[0];
+
+            float[] vertices = new float[(mesh.VertexCount * 3) * 2];
+            for (int i = 0; i < mesh.VertexCount; ++i) {
+                vertices[(i * 6) + 0] = mesh.Vertices[i].X;
+                vertices[(i * 6) + 1] = mesh.Vertices[i].Y;
+                vertices[(i * 6) + 2] = mesh.Vertices[i].Z;
+                vertices[(i * 6) + 3] = mesh.Normals[i].X;
+                vertices[(i * 6) + 4] = mesh.Normals[i].Y;
+                vertices[(i * 6) + 5] = mesh.Normals[i].Z;
+            }
 
             int size = sizeof(float) * vertices.Length;
+
 
             int[] buffer = new int[1];
             GL.CreateBuffers(1, buffer);
@@ -256,7 +260,10 @@ namespace bgl
 
             GL.BindVertexArray(array[0]);
             GL.EnableVertexArrayAttrib(array[0], 0);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+
+            int stride = sizeof(float) * 6;
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, stride, sizeof(float) * 3 /* position */ );
 
             _vao = array[0];
         }
@@ -265,48 +272,14 @@ namespace bgl
         {
             System.Console.WriteLine("Created index buffer");
 
-            /*
-                5-------- 6
-               /
-             /
-            1 ------- 2
-            |         |
-            |   4     |  7
-            |  /      | /
-            0 --------3
-             */
+            var mesh = _scene.Meshes[0];
 
-            uint[] indices = new uint[]
-            {
-                // front side
-                0,
-                1,
-                2,
-                0,
-                2,
-                3,
-                // backside
-                4,
-                5,
-                6,
-                4,
-                6,
-                7,
-                // left side
-                5,
-                4,
-                0,
-                0,
-                1,
-                5,
-                // right side
-                3,
-                2,
-                6,
-                6,
-                7,
-                3
-            };
+            int[] indices = mesh.GetIndices();
+      
+
+         
+
+    
             int size = sizeof(uint) * indices.Length;
 
             int[] buffer = new int[1];
@@ -343,6 +316,17 @@ namespace bgl
         private UniformLocations _uniformLocations = new UniformLocations();
 
         float _angle = 0;
+
+        Assimp.Scene _scene;
+        void LoadMesh() {
+          
+            const string fileName = "tests/glTF/DamagedHelmet.gltf";
+
+            var importer = new Assimp.AssimpContext();
+            _scene = importer.ImportFile(fileName, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
+
+            System.Console.WriteLine("Loaded mesh vertices=" + _scene.Meshes[0].VertexCount);
+        }
 
 
     }
