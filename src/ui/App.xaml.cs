@@ -8,11 +8,12 @@ namespace wpf_demo
     /// </summary>
     public partial class App : Application
     {
-        public App() {
-         //   this.IsActive = true 
+        public App()
+        {
+            //   this.IsActive = true 
         }
-    
-        protected override void  OnActivated (EventArgs e)
+
+        protected override void OnActivated(EventArgs e)
         {
             // App started
         }
