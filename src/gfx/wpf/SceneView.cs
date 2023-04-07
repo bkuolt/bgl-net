@@ -4,9 +4,6 @@ using System.Windows;
 using OpenTK.Mathematics;
 
 namespace bgl {
-
-
-
     public class SceneView : bgl.WPF.Viewport {
 
         public SceneView() {

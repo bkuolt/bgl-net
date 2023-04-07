@@ -1,7 +1,5 @@
 using System.Windows.Controls;
 
-/// /////////////////
-
 
 namespace bgl
 {

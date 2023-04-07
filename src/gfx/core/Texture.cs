@@ -1,7 +1,4 @@
 using OpenTK.Graphics.OpenGL;
-
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
-
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 

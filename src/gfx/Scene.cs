@@ -1,8 +1,5 @@
 namespace bgl
 {
-    using Matrix4D = OpenTK.Mathematics.Matrix4;
-    using Vector2 = OpenTK.Mathematics.Vector2;
-
     public class Scene
     {
 #if false

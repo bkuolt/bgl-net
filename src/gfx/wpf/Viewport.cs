@@ -1,12 +1,8 @@
 using OpenTK.Wpf;
-using OpenTK.Graphics.OpenGL;
 using System.Windows;
 
 namespace bgl.WPF
 {
-    using OpenGL = OpenTK.Graphics.OpenGL;
-    using Math = OpenTK.Mathematics;
-
 
     class IViewport
     {
