@@ -31,9 +31,6 @@
                 </MenuItem>
             </Menu>
         </StackPanel>
-   
-        <!-- ====================== GL Viewport ========================== --> 
-        <glWpfControl:GLWpfControl Grid.Column="1" Grid.Row="0" x:Name="OpenTkControl"/>
   </Grid>
   
 </Window>

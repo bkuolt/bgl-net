@@ -1,9 +1,6 @@
-using OpenTK.Wpf;
 using OpenTK.Graphics.OpenGL;
 using System.Windows;
 using OpenTK.Mathematics;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace bgl
 {
@@ -12,18 +9,60 @@ namespace bgl
 
     public class Renderer
     {
-        
-
-
-public void SetListView(bgl.ListView listView) {
-    _listView = listView;
-
-}
         public Renderer()
         {
-           
+            try
+            {
+                Initialize();
+            }
+            catch (System.Exception exception)
+            {
+                System.Windows.MessageBox.Show(
+                    exception.Message,
+                    "Error",
+                    MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error
+                );
+            }
         }
 
+        public void LoadModel()
+        {
+#if DEBUG
+            const string fileName = "tests/glTF/DamagedHelmet.gltf";
+            LoadModel(fileName);
+#else 
+            string? path = ChooseFile();
+            if (path.HasValue()) {
+                Load(path);
+            }
+#endif
+        }
+
+        public void LoadModel(string fileName)
+        {
+            try
+            {
+                var importer = new Assimp.AssimpContext();
+                _scene = importer.ImportFile(fileName, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
+
+                CreateVertexBuffer();
+                CreateIndexBuffer();
+                CreateVertexArray();
+                _texture = new bgl.Graphics.Core.Texture("tests/glTF/Default_metalRoughness.jpg");  // TODO
+            }
+            catch (System.Exception exception)
+            {
+                throw new System.Exception("Assimp could not load scene: " + exception.Message);
+            }
+
+            _listView?.SetScene(_scene);
+        }
+
+        public void SetListView(bgl.ListView listView)
+        {
+            _listView = listView;
+        }
 
         public void Render(System.TimeSpan delta)
         {
@@ -67,62 +106,29 @@ public void SetListView(bgl.ListView listView) {
 
 
         // --------------------------------------------------------------------------------------------------
-        private double ConvertToRadians(double angle)
+
+        void Initialize()
         {
-            return (System.Math.PI / 180) * angle;
-        }
-
-        private static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
-
-        public void Initialize()
-        {
-            try
-            {
-                LoadMesh();
-
-                /* ---------------------------- Shader Creation ----------------------- */
-                CreateShaderProgram();
-                _uniformLocations.ModelMatrix = GL.GetUniformLocation(_program, "ModelMatrix");
-                _uniformLocations.ViewMatrix = GL.GetUniformLocation(_program, "ViewMatrix");
-                _uniformLocations.ProjectionMatrix = GL.GetUniformLocation(
-                    _program,
-                    "ProjectionMatrix"
-                );
-                _uniformLocations.LightDirection = GL.GetUniformLocation(
-                    _program,
-                    "LightDirection"
-                );
+            CreateShaderProgram();
+            _uniformLocations.ModelMatrix = GL.GetUniformLocation(_program, "ModelMatrix");
+            _uniformLocations.ViewMatrix = GL.GetUniformLocation(_program, "ViewMatrix");
+            _uniformLocations.ProjectionMatrix = GL.GetUniformLocation(
+                _program,
+                "ProjectionMatrix"
+            );
+            _uniformLocations.LightDirection = GL.GetUniformLocation(
+                _program,
+                "LightDirection"
+            );
 
 
-                var textureLocation = GL.GetUniformLocation(
-                    _program,
-                    "Texture"
-                );
+            var textureLocation = GL.GetUniformLocation(
+                _program,
+                "Texture"
+            );
+            GL.Uniform1(textureLocation, (int)1);
 
-                GL.Uniform1(textureLocation, (int)1);
-
-
-                /* ---------------------------- Buffer Creation ----------------------- */
-                if (_scene != null)
-                {
-                    CreateVertexBuffer();
-                    CreateIndexBuffer();
-                    CreateVertexArray();
-                }
-
-                _texture = new bgl.Graphics.Core.Texture("tests/glTF/Default_metalRoughness.jpg");
-
-                _stopwatch.Start();
-            }
-            catch (System.Exception exception)
-            {
-                System.Windows.MessageBox.Show(
-                    exception.Message,
-                    "Error",
-                    MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Error
-                );
-            }
+            _stopwatch.Start();
         }
 
         void UpdateUniforms()
@@ -335,16 +341,38 @@ public void SetListView(bgl.ListView listView) {
             );
 
             _ibo = buffer[0];
-            System.Console.WriteLine("Created index buffer id=" + _ibo);
         }
 
-        private int _vbo;
-        private int _ibo;
-        private int _vao;
-        private bgl.Graphics.Core.Texture? _texture;
+        /// <summary>
+        /// Opens a FileDialog in order to select a GLTF file.
+        /// </summary>
+        /// <returns> The path to the GLTF model. </returns>
+        string? ChooseFile()
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.DefaultExt = ".gltf";
 
+            bool? result = dialog.ShowDialog();
+            if (result == null)
+            {
+                return null;
+            }
 
-        /* ----------------------------------- Rendering ----------------------------------  */
+            return dialog.FileName;
+        }
+
+        double ConvertToRadians(double angle)
+        {
+            return (System.Math.PI / 180) * angle;
+        }
+
+        static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+
+        int _vbo;
+        int _ibo;
+        int _vao;
+        bgl.Graphics.Core.Texture? _texture;
+
 
         protected struct UniformLocations
         {
@@ -354,27 +382,13 @@ public void SetListView(bgl.ListView listView) {
             public int LightDirection;
         };
 
-        private int _program;
-        private UniformLocations _uniformLocations = new UniformLocations();
+        int _program;
+        UniformLocations _uniformLocations = new UniformLocations();
 
         float _angle = 0;
 
         Assimp.Scene? _scene;
         bgl.ListView? _listView;
-
-        void LoadMesh()
-        {
-            const string fileName = "tests/glTF/DamagedHelmet.gltf";
-
-            var importer = new Assimp.AssimpContext();
-            _scene = importer.ImportFile(fileName, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
-            _listView?.SetScene(_scene);
-
-            System.Console.WriteLine("Loaded mesh vertices=" + _scene.Meshes[0].VertexCount);
-        }
-
-
     }
 
-    //using GL = OpenTK.Graphics.OpenGL.GL;
 } // namespace bgl

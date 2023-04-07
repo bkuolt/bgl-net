@@ -17,7 +17,6 @@ namespace bgl {
             // TODO:: set default background
         }
 
-
         private void OnMouseDown(object sender, RoutedEventArgs e)
         {
             var mouseEvent = e as System.Windows.Input.MouseButtonEventArgs;

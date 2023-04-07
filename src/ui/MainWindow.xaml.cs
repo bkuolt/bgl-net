@@ -296,7 +296,7 @@ namespace wpf_demo
             var viewport = new bgl.WPF.Viewport();
  
             viewport._renderer.SetListView(_listView);
-             viewport._renderer.Initialize();
+            viewport._renderer.LoadModel();
             
             var grid = (Grid)this.FindName("Grid");
             grid.Children.Add(viewport);
@@ -305,14 +305,6 @@ namespace wpf_demo
         }
 
         // -------------------------------------------------------------
-
-
-
-
-        /// ///////////////////////////////////
-        /// </summary>
-
-
 
         private void TestClick(object sender, MouseButtonEventArgs e)
         {
