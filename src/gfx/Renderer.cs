@@ -2,6 +2,8 @@ using OpenTK.Wpf;
 using OpenTK.Graphics.OpenGL;
 using System.Windows;
 using OpenTK.Mathematics;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace bgl
 {
@@ -10,10 +12,19 @@ namespace bgl
 
     public class Renderer
     {
+        
+
+
+public void SetListView(bgl.ListView listView) {
+    _listView = listView;
+
+}
         public Renderer()
         {
-            Initialize();
+           
         }
+
+
         public void Render(System.TimeSpan delta)
         {
             GL.UseProgram(_program);
@@ -23,6 +34,11 @@ namespace bgl
             GL.ClearColor(211 / 256.0f, 211 / 256.0f, 211 / 256.0f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+            if (_scene == null)
+            {
+                return;  // there is nothing to draw
+            }
+
             GL.BindBuffer(OpenGL.BufferTarget.ArrayBuffer, _vbo);
             GL.BindBuffer(OpenGL.BufferTarget.ElementArrayBuffer, _ibo);
             GL.BindVertexArray(_vao);
@@ -30,7 +46,10 @@ namespace bgl
             GL.Disable(OpenGL.EnableCap.CullFace);
             GL.Enable(OpenGL.EnableCap.DepthTest);
 
-            _texture.Bind(1);
+            if (_texture != null)
+            {
+                _texture.Bind(1);
+            }
 
             if (_scene.Meshes.Count <= 0)
             {
@@ -46,6 +65,7 @@ namespace bgl
             );
         }
 
+
         // --------------------------------------------------------------------------------------------------
         private double ConvertToRadians(double angle)
         {
@@ -54,7 +74,7 @@ namespace bgl
 
         private static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
 
-        private void Initialize()
+        public void Initialize()
         {
             try
             {
@@ -83,9 +103,12 @@ namespace bgl
 
 
                 /* ---------------------------- Buffer Creation ----------------------- */
-                CreateVertexBuffer();
-                CreateIndexBuffer();
-                CreateVertexArray();
+                if (_scene != null)
+                {
+                    CreateVertexBuffer();
+                    CreateIndexBuffer();
+                    CreateVertexArray();
+                }
 
                 _texture = new bgl.Graphics.Core.Texture("tests/glTF/Default_metalRoughness.jpg");
 
@@ -228,6 +251,11 @@ namespace bgl
 
         void CreateVertexBuffer()
         {
+            if (_scene == null)
+            {
+                return;
+            }
+
             if (_scene.Meshes.Count <= 0)
             {
                 return;
@@ -281,6 +309,11 @@ namespace bgl
 
         void CreateIndexBuffer()
         {
+            if (_scene == null)
+            {
+                return;
+            }
+
             if (_scene.Meshes.Count <= 0)
             {
                 return;
@@ -308,7 +341,7 @@ namespace bgl
         private int _vbo;
         private int _ibo;
         private int _vao;
-        private bgl.Graphics.Core.Texture _texture;
+        private bgl.Graphics.Core.Texture? _texture;
 
 
         /* ----------------------------------- Rendering ----------------------------------  */
@@ -326,14 +359,16 @@ namespace bgl
 
         float _angle = 0;
 
-        Assimp.Scene _scene;
+        Assimp.Scene? _scene;
+        bgl.ListView? _listView;
+
         void LoadMesh()
         {
-
             const string fileName = "tests/glTF/DamagedHelmet.gltf";
 
             var importer = new Assimp.AssimpContext();
             _scene = importer.ImportFile(fileName, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
+            _listView?.SetScene(_scene);
 
             System.Console.WriteLine("Loaded mesh vertices=" + _scene.Meshes[0].VertexCount);
         }

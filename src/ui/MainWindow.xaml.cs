@@ -258,11 +258,25 @@ namespace wpf_demo
             return null;
         }
 
+        public void NotifyScene(Assimp.Scene scene) {
+            _listView.SetScene(scene);
+        }
+
+        bgl.ListView _listView;
         public MainWindow()
         {
             InitializeComponent();
             TreeView tree = (TreeView)this.FindName("treeView");
 
+
+     
+            _listView = new bgl.ListView();
+            _listView.Name = "MeshTreeView";
+            StackPanel stackPanel = (StackPanel)this.FindName("StackPanel");
+            stackPanel.Children.Add(_listView);
+
+
+           
             const string uri = "https://e7.pngegg.com/pngimages/820/630/png-clipart-cat-kitten-cartoon-cat-cats-illustration-cartoon-character-painted-thumbnail.png";
             UpdateImageView(this.FindName("image"), uri);
 
@@ -280,7 +294,10 @@ namespace wpf_demo
             // --------------------------------- //
 
             var viewport = new bgl.WPF.Viewport();
-
+ 
+            viewport._renderer.SetListView(_listView);
+             viewport._renderer.Initialize();
+            
             var grid = (Grid)this.FindName("Grid");
             grid.Children.Add(viewport);
             Grid.SetRow(viewport, 0);

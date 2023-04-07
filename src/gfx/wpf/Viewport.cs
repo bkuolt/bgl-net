@@ -42,9 +42,10 @@ namespace bgl.WPF
         protected void OnRender(System.TimeSpan delta)
         {
             _renderer.Render(delta);
+            
         }
 
-        private bgl.Renderer _renderer;
+        public bgl.Renderer _renderer;
         private bgl.Input.Arcball? _arcball;
 
     }

@@ -20,7 +20,7 @@
         </Grid.RowDefinitions> 
 
         <!-- ========================== Menu ========================== -->
-        <StackPanel Grid.Column="0" Grid.Row="0">
+        <StackPanel Name="StackPanel" Grid.Column="0" Grid.Row="0">
             <Menu>
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" />
