@@ -95,6 +95,8 @@ namespace bgl
                 return;  // there is no mesh to draw
             }
 
+            GL.Disable(OpenGL.EnableCap.CullFace);
+
             var mesh = _scene.Meshes[0];
             GL.DrawElements(
                 OpenGL.PrimitiveType.Triangles,
@@ -110,24 +112,7 @@ namespace bgl
         void Initialize()
         {
             CreateShaderProgram();
-            _uniformLocations.ModelMatrix = GL.GetUniformLocation(_program, "ModelMatrix");
-            _uniformLocations.ViewMatrix = GL.GetUniformLocation(_program, "ViewMatrix");
-            _uniformLocations.ProjectionMatrix = GL.GetUniformLocation(
-                _program,
-                "ProjectionMatrix"
-            );
-            _uniformLocations.LightDirection = GL.GetUniformLocation(
-                _program,
-                "LightDirection"
-            );
-
-
-            var textureLocation = GL.GetUniformLocation(
-                _program,
-                "Texture"
-            );
-            GL.Uniform1(textureLocation, (int)1);
-
+            GetUniformLocations();
             _stopwatch.Start();
         }
 
@@ -237,10 +222,12 @@ namespace bgl
             string vsLog = GL.GetShaderInfoLog(vs);
             string fsLog = GL.GetShaderInfoLog(fs);
 
-            System.Console.WriteLine("VS: " + vsLog);
-            System.Console.WriteLine("FS: " + fsLog);
-
-            GL.Disable(OpenGL.EnableCap.CullFace);
+            if (vsLog.Length > 0) {
+                System.Console.WriteLine("Vertex Shader: " + vsLog);
+            }
+            if (fsLog.Length > 0) {
+                System.Console.WriteLine("Fragment Shader: " + fsLog);
+            }
 
             _program = GL.CreateProgram();
             GL.AttachShader(_program, vs);
@@ -253,6 +240,25 @@ namespace bgl
             {
                 throw new System.Exception("Could not link shader proram");
             }
+        }
+
+        void GetUniformLocations() {
+            _uniformLocations.ModelMatrix = GL.GetUniformLocation(_program, "ModelMatrix");
+            _uniformLocations.ViewMatrix = GL.GetUniformLocation(_program, "ViewMatrix");
+            _uniformLocations.ProjectionMatrix = GL.GetUniformLocation(
+                _program,
+                "ProjectionMatrix"
+            );
+            _uniformLocations.LightDirection = GL.GetUniformLocation(
+                _program,
+                "LightDirection"
+            );
+
+            var textureLocation = GL.GetUniformLocation(
+                _program,
+                "Texture"
+            );
+            GL.Uniform1(textureLocation, (int)1);
         }
 
         void CreateVertexBuffer()

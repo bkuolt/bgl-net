@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace wpf_demo
@@ -19,11 +14,9 @@ namespace wpf_demo
     
         protected override void  OnActivated (EventArgs e)
         {
-         Console.WriteLine("sd");
-         //   MessageBox.Show("changed!");
+            // App started
         }
     }
-
 
     public static class Program
     {
@@ -35,6 +28,5 @@ namespace wpf_demo
             application.Run();
         }
     }
-
 
 }

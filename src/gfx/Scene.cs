@@ -20,9 +20,6 @@ namespace bgl
                 this.Parent = parent;
             }
 
-
-
-
             public void Draw(in Matrix4D viewMatrix)
             {
                 foreach (bgl.Graphics.Core.Mesh mesh in Meshes)
@@ -71,7 +68,8 @@ namespace bgl
         private Node[] cameras;
         private uint currentCamera;
 #endif 
-        public void Pick( OpenTK.Mathematics.Vector2 mouseCoordinates,  OpenTK.Mathematics.Vector2 windowBounds) {
+        public void Pick(OpenTK.Mathematics.Vector2 mouseCoordinates, OpenTK.Mathematics.Vector2 windowBounds)
+        {
             // TODO
         }
 

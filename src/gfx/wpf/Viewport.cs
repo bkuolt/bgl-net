@@ -21,12 +21,11 @@ namespace bgl.WPF
             this.Start(settings);
 
             _renderer = new bgl.Renderer();
-            // _arcball = new bgl.Input.Arcball(this);
+            // TODO: _arcball = new bgl.Input.Arcball(this);
             
             this.Render += OnRender;
             this.MouseDown += OnMouseDown;
         }
-
 
         private void OnMouseDown(object sender, RoutedEventArgs e)
         {
@@ -38,7 +37,6 @@ namespace bgl.WPF
             MessageBox.Show(position.X.ToString() + "," + position.Y.ToString());
         }
 
-
         protected void OnRender(System.TimeSpan delta)
         {
             _renderer.Render(delta);
@@ -47,7 +45,6 @@ namespace bgl.WPF
 
         public bgl.Renderer _renderer;
         private bgl.Input.Arcball? _arcball;
-
     }
 
     // DataModel
