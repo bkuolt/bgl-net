@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
@@ -6,8 +7,31 @@ namespace bgl
     using OpenGL = OpenTK.Graphics.OpenGL;
     using Math = OpenTK.Mathematics;
 
+
+    using Texture = bgl.Graphics.Core.Texture;
+
+
+
+
+
+
     class Mesh
     {
+        static Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
+
+        Texture LoadTexture(string path)
+        {
+            Texture? texture;
+            if (!_textures.TryGetValue(path, out texture))
+            {
+                texture = new Texture(path);
+                _textures.Add(path, texture);
+            }
+
+            return texture;
+        }
+
+
         public Mesh(in Assimp.Scene scene, in Assimp.Mesh mesh)
         {
             _mesh = mesh;
@@ -15,8 +39,8 @@ namespace bgl
             CreateVertexBuffer();
             CreateIndexBuffer();
             CreateVertexArray();
-            _texture = new bgl.Graphics.Core.Texture("tests/glTF/Default_metalRoughness.jpg");  // TODO
 
+            _texture = LoadTexture("tests/glTF/Default_metalRoughness.jpg");
 
             CreateShaderProgram();
             GetUniformLocations();
@@ -24,6 +48,11 @@ namespace bgl
             {
                 _stopwatch.Start();
             }
+        }
+
+        ~Mesh()
+        {
+            // TODO: free resources
         }
 
         public void Render(System.TimeSpan delta)

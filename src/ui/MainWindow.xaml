@@ -23,9 +23,7 @@
         <StackPanel Name="StackPanel" Grid.Column="0" Grid.Row="0">
             <Menu>
                 <MenuItem Header="_File">
-                    <MenuItem Header="_New" />
-                    <MenuItem Header="_Open" />
-                    <MenuItem Header="_Save" />
+                    <MenuItem Header="_Open" Click="OnClickOpen" />
                     <Separator />
                     <MenuItem Header="_Exit" />
                 </MenuItem>

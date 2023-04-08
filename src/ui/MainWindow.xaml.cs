@@ -250,7 +250,10 @@ namespace wpf_demo
         public void NotifyScene(Assimp.Scene scene) {
             _listView.SetScene(scene);
         }
-
+private void OnClickOpen(object sender, RoutedEventArgs e)
+{
+    bgl.Renderer.LoadModel();
+}
         bgl.ListView _listView;
         public MainWindow()
         {
@@ -285,7 +288,7 @@ namespace wpf_demo
             var viewport = new bgl.WPF.Viewport();
  
             viewport._renderer.SetListView(_listView);
-            viewport._renderer.LoadModel();
+            bgl.Renderer.LoadModel();
             
             var grid = (Grid)this.FindName("Grid");
             grid.Children.Add(viewport);

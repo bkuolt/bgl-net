@@ -1,28 +1,36 @@
+using System.Windows;
 using OpenTK.Graphics.OpenGL;
 
 namespace bgl
 {
-
     public class Renderer
     {
         public Renderer()
         {
         }
 
-        public void LoadModel()
+        public static void LoadModel()
         {
-#if DEBUG
-            const string fileName = "tests/glTF/DamagedHelmet.gltf";
-            LoadModel(fileName);
-#else 
-            string? path = ChooseFile();
-            if (path.HasValue()) {
-                Load(path);
+            try
+            {
+                string? path = ChooseFile();
+                if (path != null && path.Length > 0)
+                {
+                    LoadModel(path);
+                }
             }
-#endif
+            catch (System.Exception exception)
+            {
+                System.Windows.MessageBox.Show(
+                    exception.Message,
+                    "Error",
+                    MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error
+                );
+            }
         }
 
-        public void LoadModel(string fileName)
+        public static void LoadModel(string fileName)
         {
             try
             {
@@ -66,7 +74,7 @@ namespace bgl
         /// Opens a FileDialog in order to select a GLTF file.
         /// </summary>
         /// <returns> The path to the GLTF model. </returns>
-        string? ChooseFile()
+        static string? ChooseFile()
         {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
             dialog.DefaultExt = ".gltf";
@@ -80,10 +88,10 @@ namespace bgl
             return dialog.FileName;
         }
 
-        Mesh[] _meshes = new Mesh[0];
+        static Mesh[] _meshes = new Mesh[0];
 
-        Assimp.Scene? _scene;
-        bgl.ListView? _listView;
+        static Assimp.Scene? _scene;
+        static bgl.ListView? _listView;
     }
 
 } // namespace bgl

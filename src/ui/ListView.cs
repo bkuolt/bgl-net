@@ -49,13 +49,15 @@ namespace bgl
         }
 
         private Label CreateLabel(Assimp.Mesh mesh) {
-            string text = string.Format("Vertices: {0}\nIndices: {1}\nNormals: {2}",
-                                        mesh.VertexCount, mesh.GetIndices().Length, mesh.Normals.Count);
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine(string.Format("Vertices: {0}" ,mesh.VertexCount));
+            sb.AppendLine(string.Format("Indices: {0}" ,mesh.GetIndices().Length));
+            sb.AppendLine(string.Format("Normals: {0}", mesh.Normals.Count));
+            sb.AppendLine(string.Format("Primitive Type: ", mesh.PrimitiveType.ToString()));
+
             var label = new Label();
-            label.Content = text;
+            label.Content = sb;
             return label;
         }
-
-
     }
 }
