@@ -39,6 +39,9 @@ namespace bgl
 #endif
         }
 
+
+        Mesh? _mesh;
+
         public void LoadModel(string fileName)
         {
             try
@@ -46,10 +49,11 @@ namespace bgl
                 var importer = new Assimp.AssimpContext();
                 _scene = importer.ImportFile(fileName, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
 
-                CreateVertexBuffer();
-                CreateIndexBuffer();
-                CreateVertexArray();
-                _texture = new bgl.Graphics.Core.Texture("tests/glTF/Default_metalRoughness.jpg");  // TODO
+                if (_scene.MeshCount > 0)
+                {
+                    _mesh = new Mesh(_scene, _scene.Meshes[0]);
+                }
+
             }
             catch (System.Exception exception)
             {
@@ -66,14 +70,79 @@ namespace bgl
 
         public void Render(System.TimeSpan delta)
         {
-            GL.UseProgram(_program);
-            UpdateUniforms();
 
-            // TODO: count frames per second
+           // TODO: count frames per second
             GL.ClearColor(211 / 256.0f, 211 / 256.0f, 211 / 256.0f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            if (_scene == null)
+            _mesh?.Render(delta);
+        }
+
+
+        // --------------------------------------------------------------------------------------------------
+
+        void Initialize()
+        {
+
+        }
+
+
+
+
+        /// <summary>
+        /// Opens a FileDialog in order to select a GLTF file.
+        /// </summary>
+        /// <returns> The path to the GLTF model. </returns>
+        string? ChooseFile()
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.DefaultExt = ".gltf";
+
+            bool? result = dialog.ShowDialog();
+            if (result == null)
+            {
+                return null;
+            }
+
+            return dialog.FileName;
+        }
+
+    
+        Assimp.Scene? _scene;
+        bgl.ListView? _listView;
+    }
+
+
+
+    /// <summary>
+    /// ////////////////////////////////////////////////////////////////
+
+
+    class Mesh
+    {
+        public Mesh(in Assimp.Scene scene, in Assimp.Mesh mesh)
+        {
+            _mesh = mesh;
+            _scene = scene;
+            CreateVertexBuffer();
+            CreateIndexBuffer();
+            CreateVertexArray();
+            _texture = new bgl.Graphics.Core.Texture("tests/glTF/Default_metalRoughness.jpg");  // TODO
+
+
+            CreateShaderProgram();
+            GetUniformLocations();
+            if (!_stopwatch.IsRunning) {
+                _stopwatch.Start();
+            }
+        }
+
+        public void Render(System.TimeSpan delta)
+        {
+            GL.UseProgram(_program);
+            UpdateUniforms();
+
+            if (_mesh == null)
             {
                 return;  // there is nothing to draw
             }
@@ -106,14 +175,67 @@ namespace bgl
             );
         }
 
-
-        // --------------------------------------------------------------------------------------------------
-
-        void Initialize()
+        void CreateVertexBuffer()
         {
-            CreateShaderProgram();
-            GetUniformLocations();
-            _stopwatch.Start();
+            float[] vertices = new float[(_mesh.VertexCount * 3) * 2];
+            for (int i = 0; i < _mesh.VertexCount; ++i)
+            {
+                vertices[(i * 6) + 0] = _mesh.Vertices[i].X;
+                vertices[(i * 6) + 1] = _mesh.Vertices[i].Y;
+                vertices[(i * 6) + 2] = _mesh.Vertices[i].Z;
+                vertices[(i * 6) + 3] = _mesh.Normals[i].X;
+                vertices[(i * 6) + 4] = _mesh.Normals[i].Y;
+                vertices[(i * 6) + 5] = _mesh.Normals[i].Z;
+            }
+
+            int size = sizeof(float) * vertices.Length;
+
+
+            int[] buffer = new int[1];
+            GL.CreateBuffers(1, buffer);
+            GL.BindBuffer(OpenGL.BufferTarget.ArrayBuffer, buffer[0]);
+            GL.BufferData(
+                OpenGL.BufferTarget.ArrayBuffer,
+                size,
+                vertices,
+                OpenGL.BufferUsageHint.DynamicDraw
+            );
+
+            _vbo = buffer[0];
+            System.Console.WriteLine("Created vertex buffer id=" + _vbo);
+        }
+
+        void CreateVertexArray()
+        {
+            int[] array = new int[1];
+            GL.CreateVertexArrays(1, array);
+
+            GL.BindVertexArray(array[0]);
+            GL.EnableVertexArrayAttrib(array[0], 0);
+
+            int stride = sizeof(float) * 6;
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, stride, sizeof(float) * 3 /* position */ );
+
+            _vao = array[0];
+        }
+
+        void CreateIndexBuffer()
+        {
+            int[] indices = _mesh.GetIndices();
+            int size = sizeof(uint) * indices.Length;
+
+            int[] buffer = new int[1];
+            GL.CreateBuffers(1, buffer);
+            GL.BindBuffer(OpenGL.BufferTarget.ElementArrayBuffer, buffer[0]);
+            GL.BufferData(
+                OpenGL.BufferTarget.ElementArrayBuffer,
+                size,
+                indices,
+                OpenGL.BufferUsageHint.DynamicDraw
+            );
+
+            _ibo = buffer[0];
         }
 
         void UpdateUniforms()
@@ -222,10 +344,12 @@ namespace bgl
             string vsLog = GL.GetShaderInfoLog(vs);
             string fsLog = GL.GetShaderInfoLog(fs);
 
-            if (vsLog.Length > 0) {
+            if (vsLog.Length > 0)
+            {
                 System.Console.WriteLine("Vertex Shader: " + vsLog);
             }
-            if (fsLog.Length > 0) {
+            if (fsLog.Length > 0)
+            {
                 System.Console.WriteLine("Fragment Shader: " + fsLog);
             }
 
@@ -242,7 +366,8 @@ namespace bgl
             }
         }
 
-        void GetUniformLocations() {
+        void GetUniformLocations()
+        {
             _uniformLocations.ModelMatrix = GL.GetUniformLocation(_program, "ModelMatrix");
             _uniformLocations.ViewMatrix = GL.GetUniformLocation(_program, "ViewMatrix");
             _uniformLocations.ProjectionMatrix = GL.GetUniformLocation(
@@ -260,125 +385,18 @@ namespace bgl
             );
             GL.Uniform1(textureLocation, (int)1);
         }
-
-        void CreateVertexBuffer()
-        {
-            if (_scene == null)
-            {
-                return;
-            }
-
-            if (_scene.Meshes.Count <= 0)
-            {
-                return;
-            }
-
-            var mesh = _scene.Meshes[0];
-
-            float[] vertices = new float[(mesh.VertexCount * 3) * 2];
-            for (int i = 0; i < mesh.VertexCount; ++i)
-            {
-                vertices[(i * 6) + 0] = mesh.Vertices[i].X;
-                vertices[(i * 6) + 1] = mesh.Vertices[i].Y;
-                vertices[(i * 6) + 2] = mesh.Vertices[i].Z;
-                vertices[(i * 6) + 3] = mesh.Normals[i].X;
-                vertices[(i * 6) + 4] = mesh.Normals[i].Y;
-                vertices[(i * 6) + 5] = mesh.Normals[i].Z;
-            }
-
-            int size = sizeof(float) * vertices.Length;
-
-
-            int[] buffer = new int[1];
-            GL.CreateBuffers(1, buffer);
-            GL.BindBuffer(OpenGL.BufferTarget.ArrayBuffer, buffer[0]);
-            GL.BufferData(
-                OpenGL.BufferTarget.ArrayBuffer,
-                size,
-                vertices,
-                OpenGL.BufferUsageHint.DynamicDraw
-            );
-
-            _vbo = buffer[0];
-            System.Console.WriteLine("Created vertex buffer id=" + _vbo);
-        }
-
-        void CreateVertexArray()
-        {
-            //
-            int[] array = new int[1];
-            GL.CreateVertexArrays(1, array);
-
-            GL.BindVertexArray(array[0]);
-            GL.EnableVertexArrayAttrib(array[0], 0);
-
-            int stride = sizeof(float) * 6;
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, stride, sizeof(float) * 3 /* position */ );
-
-            _vao = array[0];
-        }
-
-        void CreateIndexBuffer()
-        {
-            if (_scene == null)
-            {
-                return;
-            }
-
-            if (_scene.Meshes.Count <= 0)
-            {
-                return;
-            }
-
-            var mesh = _scene.Meshes[0];
-
-            int[] indices = mesh.GetIndices();
-            int size = sizeof(uint) * indices.Length;
-
-            int[] buffer = new int[1];
-            GL.CreateBuffers(1, buffer);
-            GL.BindBuffer(OpenGL.BufferTarget.ElementArrayBuffer, buffer[0]);
-            GL.BufferData(
-                OpenGL.BufferTarget.ElementArrayBuffer,
-                size,
-                indices,
-                OpenGL.BufferUsageHint.DynamicDraw
-            );
-
-            _ibo = buffer[0];
-        }
-
-        /// <summary>
-        /// Opens a FileDialog in order to select a GLTF file.
-        /// </summary>
-        /// <returns> The path to the GLTF model. </returns>
-        string? ChooseFile()
-        {
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.DefaultExt = ".gltf";
-
-            bool? result = dialog.ShowDialog();
-            if (result == null)
-            {
-                return null;
-            }
-
-            return dialog.FileName;
-        }
-
         double ConvertToRadians(double angle)
         {
             return (System.Math.PI / 180) * angle;
         }
 
-        static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+        readonly Assimp.Scene _scene;
+        readonly Assimp.Mesh _mesh;
 
         int _vbo;
         int _ibo;
         int _vao;
         bgl.Graphics.Core.Texture? _texture;
-
 
         protected struct UniformLocations
         {
@@ -388,13 +406,26 @@ namespace bgl
             public int LightDirection;
         };
 
-        int _program;
-        UniformLocations _uniformLocations = new UniformLocations();
 
         float _angle = 0;
 
-        Assimp.Scene? _scene;
-        bgl.ListView? _listView;
+        int _program;
+        UniformLocations _uniformLocations = new UniformLocations();
+    static System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 } // namespace bgl
