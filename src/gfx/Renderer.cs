@@ -30,25 +30,10 @@ namespace bgl
             }
         }
 
-        public static void LoadModel(string fileName)
+        public static void LoadModel(string path)
         {
-            try
-            {
-                var importer = new Assimp.AssimpContext();
-                _scene = importer.ImportFile(fileName, Assimp.PostProcessPreset.TargetRealTimeMaximumQuality);
-
-                _meshes = new Mesh[_scene.MeshCount];
-                for (int i = 0; i < _scene.MeshCount; ++i)
-                {
-                    _meshes[i] = new Mesh(_scene, _scene.Meshes[i]);
-                }
-            }
-            catch (System.Exception exception)
-            {
-                throw new System.Exception("Assimp could not load scene: " + exception.Message);
-            }
-
-            _listView?.SetScene(_scene);
+            _model = new Model(path);
+            _listView?.SetScene(_model.Scene);
         }
 
         public void SetListView(bgl.ListView listView)
@@ -59,13 +44,11 @@ namespace bgl
         public void Render(System.TimeSpan delta)
         {
             // TODO: measure frames per second
-            GL.ClearColor(211 / 256.0f, 211 / 256.0f, 211 / 256.0f, 1.0f);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            foreach (var mesh in _meshes)
+            if (_model != null)
             {
-                mesh.Render(delta);
+                _model.Draw(delta);
             }
+
         }
 
         // --------------------------------------------------------------------------------------------------
@@ -88,9 +71,9 @@ namespace bgl
             return dialog.FileName;
         }
 
-        static Mesh[] _meshes = new Mesh[0];
 
-        static Assimp.Scene? _scene;
+
+        static Model? _model;
         static bgl.ListView? _listView;
     }
 
