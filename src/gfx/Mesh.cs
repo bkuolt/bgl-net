@@ -6,8 +6,6 @@ namespace bgl
 {
     using OpenGL = OpenTK.Graphics.OpenGL;
     using Math = OpenTK.Mathematics;
-
-
     using Texture = bgl.Graphics.Core.Texture;
 
 
@@ -158,13 +156,31 @@ namespace bgl
 
         void UpdateUniforms()
         {
+
+
+
+
+
             // ----------------- View Matrix --------------
+            var width = _mesh.BoundingBox.Max.X - _mesh.BoundingBox.Min.X;
+            var height = _mesh.BoundingBox.Max.Y - _mesh.BoundingBox.Min.Y;
+            var depth = _mesh.BoundingBox.Max.Z - _mesh.BoundingBox.Min.Z;
+
+
+            Vector3 center = new Vector3(0, 0, 0);
+
+            Vector3 position = new Vector3(0, 0, -10);
+
+          
+          
             Math.Vector3 lightDirection = new Math.Vector3(1, 1, 1);
             Math.Matrix4 viewMatrix = Math.Matrix4.LookAt(
-                new Vector3(0, 1, -10),
-                new Vector3(0, 0, 0),
+                position,
+                center,
                 new Vector3(0, 1, 0)
             );
+
+
             // ----------------- Model Matrix --------------
             Math.Matrix4 modelMatrix;
 
