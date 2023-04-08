@@ -1,7 +1,3 @@
-using System.Windows;
-using OpenTK.Mathematics;
-
-
 
 namespace bgl
 {    using Matrix4D = OpenTK.Mathematics.Matrix4;

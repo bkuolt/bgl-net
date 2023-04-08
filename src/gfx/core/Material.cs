@@ -1,6 +1,3 @@
-using OpenTK.Graphics.OpenGL;
-using OpenGL = OpenTK.Graphics.OpenGL;
-
 namespace bgl.Graphics.Core
 {
     public class Material

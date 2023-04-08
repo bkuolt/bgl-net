@@ -1,6 +1,4 @@
-using System.Security.AccessControl;
 using System.Collections.Generic;
-using OpenTK.Graphics.OpenGL;
 using OpenGL = OpenTK.Graphics.OpenGL;
 
 using FreeImageAPI;

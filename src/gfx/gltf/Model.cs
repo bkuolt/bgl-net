@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Collections.Generic;
 
 namespace BGL.GLTF
