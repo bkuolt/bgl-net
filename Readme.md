@@ -1,5 +1,6 @@
 [![.NET](https://github.com/bkuolt/bgl-net/actions/workflows/dotnet.yml/badge.svg)](https://github.com/bkuolt/bgl-net/actions/workflows/dotnet.yml)
 
+![Screenshot](screenshot2.png)
 ![Screenshot](screenshot.png)
 
 # About

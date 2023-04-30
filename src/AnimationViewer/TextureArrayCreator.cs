@@ -68,7 +68,7 @@ namespace TextureArrayCreator
             System.Console.WriteLine($"Exporting {paths.Length} images as {fileInfo.FullName} ({fileInfo.Length / 1024}) KB");
         }
 
-        public void ExportAsKTX(String[] paths)
+        public void SaveAsKTX(String[] paths)
         {
             String? outputPath = ChooseFile();
             if (outputPath == null)
@@ -77,7 +77,7 @@ namespace TextureArrayCreator
                 return;
             }
 
-            ExportAsKTX(outputPath, paths);
+            SaveAsKTX(outputPath, paths);
         }
 
 
