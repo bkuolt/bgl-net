@@ -1,96 +1,139 @@
-using System.Collections.Generic;
 using OpenGL = OpenTK.Graphics.OpenGL;
-
 using FreeImageAPI;
+using System;
 
 namespace bgl.Graphics.Core
 {
-    public class Image
+    interface IImage
     {
-        public byte[] Data
-        {
-            get => _data;
-        }
-        public uint Width;
-        public uint Height;
+        public byte[] Data { get; }
+        public uint Width { get; }
+        public uint Height { get; }
+        public uint Channels { get; }
 
-        public readonly OpenGL.PixelFormat Format = OpenGL.PixelFormat.Rgba;
-        public readonly OpenGL.PixelType Type = OpenGL.PixelType.Byte;
-
-        System.IO.MemoryStream CreateMemoryStream(uint width, uint height)
-        {
-            _data = new byte[Width * Height * 4];
-            return new System.IO.MemoryStream(_data);
-        }
+        public void Load(in string path);
+        public void Load(System.IO.MemoryStream stream, String extension);
+    }
+ 
+#if BGL_USE_FREEIMAGE
+    public class FreeImageImage : Image
+    {
+        public byte[] Data { get => _data }
+        public uint Width { get => _width; }
+        public uint Height { get => _heigth; }
+        public uint Channels { get => _channels }
 
         public Image(in string path)
         {
-            FREE_IMAGE_FORMAT format = FreeImage.GetFileType(
-                path,
-                0 /* unused */
-            );
-            if (format == FREE_IMAGE_FORMAT.FIF_UNKNOWN) { }
-            FIBITMAP _bitmap = FreeImage.Load(format, path, 0);
-            _bitmap = FreeImage.ConvertTo32Bits(_bitmap);
-            _bitmap = FreeImage.ConvertToType(_bitmap, FREE_IMAGE_TYPE.FIT_BITMAP, true);
+            Load(path);
+        }
 
-            Width = FreeImage.GetWidth(_bitmap);
-            Height = FreeImage.GetHeight(_bitmap);
-            const int channels = 4;
+        public Image(System.IO.MemoryStream stream, FREE_IMAGE_FORMAT format)
+        {
+            FIBITMAP bitmap = FreeImage.LoadFromStream(stream);
+            Load(bitmap, format);
+        }
 
-            uint size = Width * Height * channels * (FreeImage.GetBPP(_bitmap) / 8);
+        public void Load(String path)
+        {
+            FREE_IMAGE_FORMAT format = FreeImage.GetFileType(path, 0);
+            if (format == FREE_IMAGE_FORMAT.FIF_UNKNOWN)
+            {
+                throw new System.Exception("unknown image format");
+            }
+
+            FIBITMAP bitmap = FreeImage.Load(format, path, 0);
+            Load(bitmap, format);
+        }
+
+        public void Load(FIBITMAP bitmap, String format)
+        {
+            throw new Exception("not implemented yet");  // TODO
+        }
+
+        private void Load(FIBITMAP bitmap, FREE_IMAGE_FORMAT format)
+        {
+            if (bitmap.IsNull)
+            {
+                throw new System.Exception("could not load image");
+            }
+
+            _width = FreeImage.GetWidth(bitmap);
+            _height = FreeImage.GetHeight(bitmap);
+            uint bytesPerPixel = FreeImage.GetLine(bitmap) / Width;
+            _channels = bytesPerPixel / sizeof(byte);
+
+            bitmap = ConvertImage(bitmap);
+
+            uint size = Width * Height * Channels * (FreeImage.GetBPP(bitmap) / 8);
             _data = new byte[size];
 
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(_data);
-            FreeImage.SaveToStream(_bitmap, stream, format);
-            FreeImage.Unload(_bitmap);
+            System.IO.MemoryStream stream = new System.IO.MemoryStream(Data);
+            FreeImage.SaveToStream(bitmap, stream, format);
+            FreeImage.Unload(bitmap);
         }
 
-#if false
-        public Image(byte[] data, in string extension)
+        private FIBITMAP ConvertImage(FIBITMAP bitmap)
         {
-            FIBITMAP _bitmap = new FIBITMAP();
-            FREE_IMAGE_FORMAT format = FreeImage.GetFileType(extension, 0 /* unused */);
+            var oldImage = bitmap;
+            switch (Channels)
+            {
+                case 4:
+                    bitmap = FreeImage.ConvertTo32Bits(bitmap);
+                    break;
+                case 3:
+                    bitmap = FreeImage.ConvertTo24Bits(bitmap);
+                    break;
+                default:
+                    throw new System.Exception("not yet supported");  // TODO
+            }
 
-            _data = (byte[]) data.Clone();
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(_data);
-            var flags = FreeImageAPI.FREE_IMAGE_LOAD_FLAGS.DEFAULT;
-            _bitmap = FreeImage.LoadFromStream(stream, flags);
-            FreeImage.Unload(_bitmap);
+            FreeImage.Unload(oldImage);
+            if (bitmap.IsNull)
+            {
+                throw new System.Exception("image could be converted");
+            }
+
+            bitmap = FreeImage.ConvertToType(bitmap, FREE_IMAGE_TYPE.FIT_BITMAP, true);
+            if (bitmap.IsNull)
+            {
+                throw new System.Exception("image could be converted");
+            }
+
+            return bitmap;
         }
-#endif
-        ~Image() { }
 
         private byte[] _data;
+        uint _width;
+        uint _height;
+        uint _channels;
     }
-
-    public interface ImageLoader
-    {/* 
-        public Image Load(in string path)
-        {
-            string extension = System.IO.Path.GetExtension(path);
-            return loaders[extension].Load(path);
-        }
-*/
-        public static void Add(in string extension, in ImageLoader loader)
-        {
-#if false
-            if (loader == null)
-            {
-                throw new System.Exception("invalid loader 'null'");
-            }
-            string trimmedExtension = extension.Trim();
-            loaders.Add(trimmedExtension, loader);
 #endif
-        }
 
-        public static void Remove(in ImageLoader loader)
-        {
-            // TODO
-        }
+#if BGL_USE_IMAGESHARP
+    public class ImageSharpImage : IImage
+    {
+        public byte[] Data { get; }
+        public uint Width { get => _width; }
+        public uint Height { get; }
+        public uint Channels { get; }
 
-        private static Dictionary<string, ImageLoader>? loaders;
+        /* 
+            var image = ImageSharp.Image.Load<Rgba32>(path);
+            image.Mutate(x => x.Flip(FlipMode.Vertical));
+
+            _pixels = new byte[4 * image.Width * image.Height];
+            image.CopyPixelDataTo(_pixels);
+            _width = image.Width;
+            _height = image.Height;
+        */
+    }
+#endif
+
+    class ImageLoader {
+        public static IImage LoadImage(String path) {
+            return null;  // TODO
+        }
     }
 
-    // TODO: tests
 }

@@ -7,6 +7,13 @@ namespace bgl.Graphics.Core
     using ImageSharp = SixLabors.ImageSharp;
     using OpenGL = OpenTK.Graphics.OpenGL;
 
+/*
+
+
+        public readonly OpenGL.PixelFormat Format = OpenGL.PixelFormat.Rgba;  // TODO
+        public readonly OpenGL.PixelType Type = OpenGL.PixelType.Byte;        // TODO
+
+ */
     public class Texture
     {
         public const PixelInternalFormat internalFormat = PixelInternalFormat.Rgba32f;
