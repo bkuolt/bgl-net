@@ -1,0 +1,141 @@
+﻿<Window x:Class="AnimationViewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:AnimationViewer"
+        mc:Ignorable="d"
+        Title="Papa Noel Animation Editor"
+        Height="450"
+        Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0"
+                   Grid.Column="0">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New" />
+                    <MenuItem Header="_Open" />
+                    <MenuItem Header="_Save" />
+                    <Separator />
+                    <MenuItem Header="_Exit" />
+                </MenuItem>
+                         <MenuItem Header="Help">
+                    <MenuItem Header="_New" />
+       
+                </MenuItem>
+            </Menu>
+    
+        </DockPanel>
+
+        <Grid Grid.Row="1"
+            Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.75*" />
+                <ColumnDefinition Width="0.25*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="10"
+                    BorderBrush="Gray"
+                    BorderThickness="2">
+                <Grid Name="FrameGrid"
+                      ShowGridLines="True"
+                      Background="#555555"
+                      Margin="0"
+                      Width="Auto"
+                      Height="Auto" />
+            </Border>
+            
+            <Grid Grid.Row="0" Grid.Column="1" ShowGridLines="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                    
+                <Grid Grid.Row="0"
+                    Grid.Column="1"
+                    ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                        Grid.Column="0"
+                        Content="Number of Frames"
+                        HorizontalAlignment="Right" />
+                    <Label Grid.Row="1"
+                        Grid.Column="0"
+                        Content="FPS"
+                        HorizontalAlignment="Right" />
+                    <Label Grid.Row="2"
+                        Grid.Column="0"
+                        Content="Repeats"
+                        HorizontalAlignment="Right" />
+                    <Label Grid.Row="3"
+                        Grid.Column="0"
+                        Content="Size"
+                        HorizontalAlignment="Right" />
+
+                    <Label Grid.Row="0"
+                        Grid.Column="1"
+                        Content="0"
+                        VerticalAlignment="Top" />
+                    <TextBox Grid.Row="1"
+                            Grid.Column="1"
+                            MaxLength="3" />
+                    <CheckBox Grid.Row="2"
+                            Grid.Column="1"
+                            VerticalAlignment="Center" />
+
+                    <Label Grid.Row="3"
+                        Grid.Column="1"
+                        VerticalAlignment="Top" Content="0 MB" />
+                </Grid>
+
+
+                <Grid Grid.Row="1"
+                    Grid.Column="0"
+                    ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"> Save </Button> 
+
+                <TreeView Grid.Row="1" Grid.Column="0" >
+                    <TreeViewItem Name="FrameList" Header="Frames" IsSelected="True"/>
+                </TreeView>
+
+                </Grid>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</Window>
