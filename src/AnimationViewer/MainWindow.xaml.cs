@@ -49,6 +49,15 @@ namespace AnimationViewer
             FillList(treeView, files);
         }
 
+        // TODO: SaveFile()
+        // TODO: void OpenFile()
+        // TODO: ShowAboutDialog()
+
+        // TODO: on click image
+        // TODO: select TreeViewItem
+        // Drag & Droip Support
+        // STatusBar
+
         Image LoadImage(String uri)
         {
             var bitmapImage = new BitmapImage();
@@ -73,13 +82,15 @@ namespace AnimationViewer
 
         void FillGrid(System.Windows.Controls.Grid grid, String[] paths)
         {
-            const String AssetPath = @"C:\Users\Bastian\Code\bgl-net\AnimationViewer\";
+            const String AssetPath = @"C:\Users\Bastian\Code\bgl-net\src\AnimationViewer\";
 
-            //    grid.ColumnDefinitions.
+
+
+            grid.RowDefinitions.Clear();
+            grid.ColumnDefinitions.Clear();
+            grid.Children.Clear();
 
             var root = (int) Math.Log2(paths.Length);
-
-
             int columns = root;
             int rows = root;
 

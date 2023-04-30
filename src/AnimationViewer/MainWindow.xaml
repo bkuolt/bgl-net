@@ -28,9 +28,8 @@
                     <Separator />
                     <MenuItem Header="_Exit" />
                 </MenuItem>
-                         <MenuItem Header="Help">
-                    <MenuItem Header="_New" />
-       
+                    <MenuItem Header="Help">
+                    <MenuItem Header="About" />
                 </MenuItem>
             </Menu>
     
