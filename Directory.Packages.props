@@ -1,0 +1,19 @@
+<Project>
+  <ItemGroup>
+    <PackageVersion Include="AssimpNet" Version="5.0.0-beta1" />
+    <PackageVersion Include="OpenTK.GLWpfControl" Version="4.2.3" />
+    <PackageVersion Include="OpenTK" Version="4.7.4" />
+
+    <PackageVersion Include="FreeImage-dotnet-core" Version="4.3.6" />
+
+
+    <PackageVersion Include="StbImageSharp" Version="2.27.13" />
+    <PackageVersion Include="StbSharp" Version="0.7.2.38" />
+      
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.0.1" />
+
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.0.2" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.0.2" />
+  </ItemGroup>
+</Project>

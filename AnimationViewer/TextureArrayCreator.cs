@@ -127,6 +127,7 @@ namespace TextureArrayCreator
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error: {message}");
             Console.ForegroundColor = previousForegroundColor;
+            return true;
 #endif
         }
 
