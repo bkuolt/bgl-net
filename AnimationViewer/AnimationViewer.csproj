@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <RootNamespace>AnimationEditor</RootNamespace>
-        <LangVersion>9</LangVersion>
+        <LangVersion>11</LangVersion>
         <TargetFrameworks>net6.0-windows;net45</TargetFrameworks>
     </PropertyGroup>
 
