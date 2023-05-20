@@ -6,56 +6,26 @@ using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 using Pixel = SixLabors.ImageSharp.PixelFormats.Rgba32;
 using Image = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>;
 
+
+using MessageBoxImage = System.Windows.MessageBoxImage;
+using MessageBoxButton = System.Windows.MessageBoxButton;
+using MessageBoxResult = System.Windows.MessageBoxResult;
+
 namespace bgl {
-    public struct vec2 {
-        public vec2() {
-            x = 0;
-            y = 0;
-        }
-        public int x;
-        public int y;
-    }
-
-        public struct BoundingBox {
-            public BoundingBox() {
-                min.x = System.Int32.MaxValue;
-                min.y = System.Int32.MaxValue;
-                max.x = System.Int32.MinValue;
-                max.y = System.Int32.MinValue;
-            }
-
-
-            public vec2 Max(BoundingBox a, BoundingBox b)
-            {
-                vec2 max;
-                max.x = System.Math.Max(a.max.x, b.max.x);
-                max.y = System.Math.Max(a.max.y, b.max.y);
-                return max;
-            }
-
-            public int GetWidth() {
-                return max.x - min.x;
-            }
-
-            public int GetHeight() {
-                return max.x - min.x;;
-            }            
-
-             public vec2 min;
-             public vec2 max;
-        }
-
-
-
+    /// <summary>
+    /// 
+    /// </summary>
     class AnimationBuilder {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="images"></param>
+        /// <param name="outputPath"></param>
+        /// <returns></returns>
         public Image BuildAnimation(Image[] images, string outputPath) {
-            // TODO: check whether images is emptx
-            // TODO: chekc if Path is valid
-                 
-            Image? resizedImage;
             try
-            {
+            {      
+                Image resizedImage;
                 BoundingBox boundingBox = CalculateBoundingBox(images);
                 int width = boundingBox.GetWidth();
                 int height = boundingBox.GetHeight();
@@ -68,35 +38,92 @@ namespace bgl {
                 for (int i = 0; i < images.Length; ++i) {
                     var data = new Pixel[width * height];
                     var frame = resizedImage.Frames.AddFrame(data);
-                    // TODO: copy from source image    
 
+                    // copy from source image 
                     var rectangle = new SixLabors.ImageSharp.Rectangle();
                     images[i].Mutate( (image) => image.Crop(rectangle) );
                     images.CopyTo(data, 0);
                 }
 
-            } catch {
-                // TODO: could not process images
-            }
-
-            try {
                 SetMetadata(resizedImage);
-                resizedImage.SaveAsPng(outputPath);
+                // TODO: log savings
+                return resizedImage;
             } catch {
-                // TODO: could not save image
+                throw new System.Exception("could not process images");
             }
-
-            // TODO: log savings
-            return resizedImage;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="images"></param>
         public void BuildAnimation(Image[] images) {
-            try {
-                string outputPath = "";  // TODO: prompt output path
-                BuildAnimation(images, outputPath);
-            } catch {
-                return; // TODO: show error dialog
+                string? outputPath = ChooseFile("Where to save the animation?", ".png");
+                if (outputPath == null) {
+                    return;  // there is nothing to do
+                }
+
+                try {
+                    using (var image = BuildAnimation(images, outputPath))
+                    SaveFile(image, outputPath);
+                } 
+                catch(System.Exception exception) {
+                    ShowError(exception.Message);
+                }
+        }
+
+        /* ---------------------------------------------------------------------------------- */
+        protected static string? ChooseFile(string dialogTile, string extension) {
+            string[] extensions = new string[1] { $"() *.{extension}" };
+            return ChooseFile(extension, dialogTile, extensions);
+        }
+  
+        protected static string? ChooseFile(string dialogTile, string defaultExension, string[] extensions) {           
+            var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.FileName = dialogTile;
+            dialog.DefaultExt = defaultExension;
+            dialog.Filter = System.String.Join(";", extensions);
+            bool? didChoose = dialog.ShowDialog();
+            return didChoose.HasValue && didChoose.Value  == true ? dialog.FileName : null;
+        }
+
+        void SaveFile(Image image, string path) {
+            var numPixels = image.Size.Width * image.Size.Height;
+            if (numPixels == 0) {
+                ShowWarning("Image is empty.");
+                return;
             }
+
+            var fileInfo = new System.IO.FileInfo(path);
+            if (fileInfo.Exists) {
+                bool allowOverride = PromptOption("Warning", $"Do you really want to override '{fileInfo.Name}'?");
+                if (!allowOverride) {
+                    return;
+                }
+            }
+
+            try {
+                image.SaveAsPng(path);
+            } catch {
+                throw new System.Exception("Could not save image.");
+            }
+        }
+
+        protected MessageBoxResult ShowMessage(MessageBoxImage icon, string caption, string text, MessageBoxButton button = MessageBoxButton.OK) {    
+            return System.Windows.MessageBox.Show(text, caption, button, icon);
+        }
+
+        protected void ShowError(string text, string caption = "Error") {
+            ShowMessage(MessageBoxImage.Error, caption, text);
+        }
+        protected void ShowWarning(string text, string caption = "Warning") {
+            ShowMessage(MessageBoxImage.Warning, caption, text);
+        }
+
+        protected bool PromptOption(string caption, string text)
+        {
+            var result = ShowMessage(MessageBoxImage.Question, caption, text);
+            return result == MessageBoxResult.Yes;
         }
 
         /* ---------------------------------------------------------------------------------- */
@@ -123,7 +150,6 @@ namespace bgl {
 
         public BoundingBox CalculateBoundingBox(Image[] images) 
         {
-  
             BoundingBox[] boundingBoxes = CalculateBoundingBoxes(images);
             var boundingBox = CalculateBoundingBox(boundingBoxes);
             return boundingBox;
@@ -154,29 +180,10 @@ namespace bgl {
             return boundingBox;
         }
 
-        /// <summary>
-        ///////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////
-        
-        // TODO: makeStatic
-
-        private void SetMetadata(Image? image) {
-            if (image == null) {
-                return;  // ther is nothing to do
-            }
-
+        private void SetMetadata(Image image) {
             image.Metadata.IptcProfile = new SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcProfile();
-            // TODO
-            image.Metadata.IptcProfile.SetValue(IptcTag.Name, "Pokemon");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Byline, "Thimo Pedersen");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Caption, "Classic Pokeball Toy on a bunch of Pokemon Cards. Zapdos, Ninetales and a Trainercard visible.");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Source, @"https://rb.gy/hgkqhy");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, "Pokemon");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, "Pokeball");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, "Cards");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, "Zapdos");
-            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, "Ninetails");
+            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, "FPS");
+            image.Metadata.IptcProfile.SetValue(IptcTag.Keywords, "Interpolation");
         }
     }
 }
