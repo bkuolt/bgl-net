@@ -11,6 +11,8 @@
 
     <ItemGroup>
         <PackageReference Include="SixLabors.ImageSharp"/>
+    </ItemGroup>
+
 </ItemGroup>
     <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <DefineConstants>OS_WINDOWS</DefineConstants>

@@ -11,12 +11,11 @@ namespace AnimationEditor
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow :   System.Windows.Window
     {
        
         public MainWindow()
         {
-        
             InitializeComponent();
             var grid = this.FindName("FrameGrid") as System.Windows.Controls.Grid;
 
@@ -78,18 +77,17 @@ namespace AnimationEditor
             {
                 if (IsSupportedFile(fileInfo))
                 {
-                    pathList.Add(path);
+                 //   pathList.Add(path);
                 }
                 // TODO: check if extension is supported
             }
         }
 
-        private static void AddAssets(System.Windows.DragEventArgs event)
+        private static void AddAssets(System.Windows.DragEventArgs _event)
         {
-            var path =  event.Data.GetData(DataFormats.FileDrop);
-              
+            var path =  _event.Data.GetData(DataFormats.FileDrop) as string;
+    
          
-            
             var fileInfo = new System.IO.FileInfo(path);
             bool isDirectory = fileInfo.Directory.Exists;
             bool isFile = fileInfo.Exists;
@@ -108,18 +106,17 @@ namespace AnimationEditor
             }
         }
 
-        
-        protected override void OnDrop(DragEventArgs event)
+        protected override void OnDrop(DragEventArgs e)
         {
-            AddAssets(event);
+            AddAssets(e);
           
             
             //
 #if DEBUG
             var sb = new System.Text.StringBuilder();
-            foreach (var path in pathList) {
+           // foreach (var path in pathList) {
             //    sb.AppendLine($"\t{path}");
-            }
+           // }
      //       MessageBox.Show(sb.ToString(), $"Added {pathList.Count} files", MessageBoxButton.OK, MessageBoxImage.Information);
 #endif
         }
